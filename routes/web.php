@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EresAdminController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\InventoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,6 +98,20 @@ Route::middleware(['auth'])->group(function () {
     // Menu Khusus Manager untuk kelola user
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
+
+    // Rute Master WAREHOUSE (Fase 2)
+    Route::get('/warehouse/items', [ItemController::class, 'index'])->name('items.index');
+    Route::post('/warehouse/items', [ItemController::class, 'store'])->name('items.store');
+    Route::put('/warehouse/items/{item}', [ItemController::class, 'update'])->name('items.update');
+    Route::delete('/warehouse/items/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
+    Route::patch('/warehouse/items/{item}/toggle-status', [ItemController::class, 'toggleStatus'])->name('items.toggle_status');
+
+    // RUTE TRANSAKSI GUDANG
+    Route::get('/warehouse/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    Route::post('/warehouse/inventory', [InventoryController::class, 'store'])->name('inventory.store');
+
+    // RUTE MASTER BOM
+    Route::resource('/warehouse/boms', App\Http\Controllers\BomController::class);
 });
 
 Auth::routes([
