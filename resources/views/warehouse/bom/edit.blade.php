@@ -11,6 +11,13 @@
             <h4 class="card-title">Edit Formula Master (BOM): {{ $bom->name }}</h4>
         </div>
         <div class="card-body">
+            @php
+                // Deteksi apakah ini mode manual (karena komponen bahan baku kosong)
+                $isManualMode = $bom->components->count() === 0;
+                // Format HPP saat ini menjadi format ribuan (misal: 15.000)
+                $currentHppFormatted = number_format($bom->product->default_price ?? 0, 0, ',', '.');
+            @endphp
+
             <form action="{{ route('boms.update', $bom->id) }}" method="POST" id="bomForm">
                 @csrf
                 @method('PUT')
@@ -32,13 +39,13 @@
                         <label class="text-primary font-weight-bold">Mode Kalkulasi HPP:</label>
                         <div class="d-flex align-items-center form-group border p-3 rounded" style="background:#f8f9fa;">
                             <div class="form-check me-4">
-                                <input class="form-check-input" type="radio" name="calc_mode" id="modeAuto" value="auto" checked onchange="toggleMode()">
+                                <input class="form-check-input" type="radio" name="calc_mode" id="modeAuto" value="auto" {{ !$isManualMode ? 'checked' : '' }} onchange="toggleMode()">
                                 <label class="form-check-label" for="modeAuto">
                                     Otomatis (Hitung dari Resep Bahan Baku)
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="calc_mode" id="modeManual" value="manual" onchange="toggleMode()">
+                                <input class="form-check-input" type="radio" name="calc_mode" id="modeManual" value="manual" {{ $isManualMode ? 'checked' : '' }} onchange="toggleMode()">
                                 <label class="form-check-label" for="modeManual">
                                     Manual (Input HPP Langsung)
                                 </label>
@@ -47,17 +54,17 @@
                     </div>
                 </div>
 
-                <div id="manualInputSection" style="display: none;" class="mb-4 bg-light p-4 rounded border-warning border">
+                <div id="manualInputSection" style="display: {{ $isManualMode ? 'block' : 'none' }};" class="mb-4 bg-light p-4 rounded border-warning border">
                     <h5 class="text-warning">Nominal HPP Manual</h5>
                     <p class="text-muted fs-14">Masukkan Harga Pokok Produk (HPP) akhir secara eksplisit. Form resep bahan baku di bawah tidak akan diproses nominal harganya.</p>
                     <div class="input-group input-group-lg">
                         <span class="input-group-text bg-white">Rp</span>
-                        <!-- Menarik Harga HPP saat ini -->
-                        <input type="text" name="total_hpp" id="manualHPP" class="form-control text-success fw-bold fs-20" placeholder="0" value="{{ (int)($bom->product->default_price ?? 0) }}">
+                        <!-- Menarik Harga HPP saat ini DENGAN FORMAT RIBUAN -->
+                        <input type="text" name="total_hpp" id="manualHPP" class="form-control text-success fw-bold fs-20" placeholder="0" value="{{ $currentHppFormatted }}">
                     </div>
                 </div>
 
-                <div id="autoInputSection">
+                <div id="autoInputSection" style="display: {{ !$isManualMode ? 'block' : 'none' }};">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="text-primary m-0">Daftar Bahan Baku / Material (Input)</h5>
                     </div>
@@ -148,7 +155,7 @@
 </div>
 @endsection
 
-@push('scripts') 
+@push('scripts')
 <script>
     // Fitur Hide/Show Ceklak-Ceklik
     function toggleMode() {

@@ -37,7 +37,7 @@ class BomController extends Controller
         $request->validate([
             'item_id' => 'required|exists:items,id|unique:boms,item_id',
             'calc_mode' => 'required|in:auto,manual',
-            'total_hpp' => 'required_if:calc_mode,manual|numeric|min:0',
+            'total_hpp' => 'required_if:calc_mode,manual', // <-- Hilangkan |numeric|min:0
         ], [
             'item_id.unique' => 'Produk ini SUDAH MEMILIKI resep Formula/BOM.',
         ]);
@@ -125,7 +125,7 @@ class BomController extends Controller
         $request->validate([
             'item_id' => 'required|exists:items,id',
             'calc_mode' => 'required|in:auto,manual',
-            'total_hpp' => 'nullable|numeric|min:0', // jika string bisa ditambahkan pembersihan format
+            'total_hpp' => 'nullable',  // <-- Hilangkan |numeric|min:0
         ]);
 
         try {

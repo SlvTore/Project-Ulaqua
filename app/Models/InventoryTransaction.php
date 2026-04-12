@@ -29,17 +29,28 @@ class InventoryTransaction extends Model
     {
         // Fungsi ini akan dieksekusi secara otomatis setiap model ini di "Create" (disimpan)
         static::created(function ($transaction) {
-            $item = $transaction->item;
-
-            if ($transaction->type === 'IN') {
-                // Barang masuk, stok bertambah
-                $item->expected_stock += $transaction->qty;
-            } elseif ($transaction->type === 'OUT') {
-                // Barang keluar, stok berkurang
-                $item->expected_stock -= $transaction->qty;
+            $item = \App\Models\Item::find($transaction->item_id);
+            if ($item) {
+                if ($transaction->type === 'IN') {
+                    $item->expected_stock += $transaction->qty;
+                } elseif ($transaction->type === 'OUT') {
+                    $item->expected_stock -= $transaction->qty;
+                }
+                $item->saveQuietly(); // Simpan tanpa mentrigger event lain
             }
+        });
 
-            $item->save(); // Simpan master barang terbaru
+        // FUNGSI BARU CANGGIH: Jika tiket transaksi dihapus, stok MAJU-MUNDUR dikembalikan ke asal!
+        static::deleted(function ($transaction) {
+            $item = \App\Models\Item::find($transaction->item_id);
+            if ($item) {
+                if ($transaction->type === 'IN') {
+                    $item->expected_stock -= $transaction->qty; // Revert IN
+                } elseif ($transaction->type === 'OUT') {
+                    $item->expected_stock += $transaction->qty; // Revert OUT
+                }
+                $item->saveQuietly();
+            }
         });
     }
 }

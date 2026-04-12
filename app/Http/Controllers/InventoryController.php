@@ -65,4 +65,64 @@ class InventoryController extends Controller
 
         return redirect()->back()->with('success', 'Transaksi barang berhasil diinput dan Saldo Stok telah terupdate otomatis!');
     }
+
+    // FUNGSI UNTUK MENAMPILKAN HALAMAN FORM STOK OPNAME
+    public function opname()
+    {
+        $page_title = 'Stok Opname (Penyesuaian Fisik)';
+        // Menampilkan semua barang untuk langsung di-opname sekalian
+        $items = Item::with('category', 'unit')
+            ->orderBy('category_id')
+            ->get();
+
+        return view('warehouse.inventory.opname', compact('items', 'page_title'));
+    }
+
+    // FUNGSI UNTUK MEMPROSES HASIL OPNAME
+    public function storeOpname(Request $request)
+    {
+        $request->validate([
+            'physical_stocks' => 'required|array', // Menerima deretan angka array dari form Opname
+            'notes' => 'nullable|string'
+        ]);
+
+        $transactionCount = 0;
+
+        foreach ($request->physical_stocks as $item_id => $physical_stock) {
+            // Hindari data kosong/tidak diisi
+            if ($physical_stock === null || $physical_stock === '') continue;
+
+            $item = Item::findOrFail($item_id);
+            $system_stock = $item->expected_stock;
+            $physical_qty = (float) $physical_stock;
+
+            // Apakah stok fisik BERBEDA dengan stok sistem web?
+            if ($physical_qty !== $system_stock) {
+                // Cari tahu apakah barang dinyatakan lebih (Masuk) atau hilang/kurang (Keluar)
+                $difference = $physical_qty - $system_stock;
+
+                $type = $difference > 0 ? 'IN' : 'OUT';
+                $adjusted_qty = abs($difference); // abs() akan mengubah angka minus jadi plus murni
+
+                // Otomatis bikin tiket Riwayat Transaksi (Sistem DB Anda otomatis nge-update barangnya!)
+                \App\Models\InventoryTransaction::create([
+                    'item_id'          => $item->id,
+                    'user_id'          => \Illuminate\Support\Facades\Auth::id(),
+                    'type'             => $type,
+                    'qty'              => $adjusted_qty,
+                    'transaction_date' => now(), // tanggal hari ini disaat opname terjadi
+                    'reference_number' => 'OPN-' . date('Ymd-His'), // contoh kode nota "OPN-20230801-143000"
+                    'notes'            => 'Penyesuaian Fisik Opname. ' . ($request->notes ?? 'Sistem melaporkan ' . $system_stock . ', aktual Gudang: ' . $physical_qty),
+                ]);
+
+                $transactionCount++;
+            }
+        }
+
+        if ($transactionCount > 0) {
+            return redirect()->back()->with('success', "Stok Opname berhasil diselesaikan! Terdapat {$transactionCount} pencatatan penyesuaian selisih stok gudang.");
+        }
+
+        return redirect()->back()->with('info', "Opname dikirim, namun tidak ada selisih. Jumlah stok fisik dan sistem terhitung klop/sinkron.");
+    }
 }

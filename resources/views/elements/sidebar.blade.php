@@ -27,7 +27,9 @@
                     <li><a href="{{ route('items.index') }}">Katalog Barang (Items)</a></li>
                     <li><a href="{{ route('boms.index') }}">Bill of Materials (BOM)</a></li>
                     <li><a href="{{ route('inventory.index') }}">Barang Masuk / Keluar</a></li>
-                    <li><a href="#">Stok Opname</a></li>
+
+                    <!-- BENTUK YANG BENAR (Arahkan rute ke halaman Opname) -->
+                    <li><a href="{{ route('inventory.opname') }}">Stok Opname</a></li>
                 </ul>
             </li>
 
@@ -38,7 +40,7 @@
                 </a>
                 <ul aria-expanded="false">
                     <li><a href="#">Penjualan (Sales)</a></li>
-                    <li><a href="#">Biaya Pabrik / HPP</a></li>
+                    <li><a href="{{ route('productions.index') }}">Produksi</a></li>
                     <li><a href="#">Laporan Arus Kas</a></li>
                 </ul>
             </li>

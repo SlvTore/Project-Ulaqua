@@ -107,12 +107,23 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/warehouse/items/{item}/toggle-status', [ItemController::class, 'toggleStatus'])->name('items.toggle_status');
 
     // RUTE TRANSAKSI GUDANG
-    Route::get('/warehouse/inventory', [InventoryController::class, 'index'])->name('inventory.index');
-    Route::post('/warehouse/inventory', [InventoryController::class, 'store'])->name('inventory.store');
+    Route::get('/warehouse/inventory', [App\Http\Controllers\InventoryController::class, 'index'])->name('inventory.index');
+    Route::post('/warehouse/inventory', [App\Http\Controllers\InventoryController::class, 'store'])->name('inventory.store');
+
+    // RUTE STOK OPNAME (BARU)
+    Route::get('/warehouse/opname', [App\Http\Controllers\InventoryController::class, 'opname'])->name('inventory.opname');
+    Route::post('/warehouse/opname', [App\Http\Controllers\InventoryController::class, 'storeOpname'])->name('inventory.storeOpname');
 
     // RUTE MASTER BOM
     Route::resource('/warehouse/boms', App\Http\Controllers\BomController::class);
-});
+
+    // ============================================
+    // RUTE FINANCE & PRODUKSI (FASE 4)
+    // ============================================
+
+    Route::resource('/finance/productions', App\Http\Controllers\ProductionController::class);
+
+}); // <-- (Pastikan ini diletakkan sebelum penutup middleware auth group)
 
 Auth::routes([
     'register' => false,
