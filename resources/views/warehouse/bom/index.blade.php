@@ -29,11 +29,13 @@
                     <tbody>
                         @foreach($boms as $bom)
                         <tr>
-                            <td>#BOM-{{ sprintf('%03d', $bom->id) }}</td>
+                            <td><strong>{{ $loop->iteration }}</strong></td>
                             <td class="font-w600 text-primary">{{ $bom->name }}</td>
                             <td><span class="badge badge-success light">{{ $bom->product->name }}</span></td>
                             <td>
-                                <form action="{{ route('boms.destroy', $bom->id) }}" method="POST" onsubmit="return confirm('Hapus resep ini?');">
+                                <a href="{{ route('boms.edit', $bom->id) }}" class="btn btn-primary btn-xs sharp shadow me-1"><i class="fa fa-pencil-alt"></i></a>
+
+                                <form action="{{ route('boms.destroy', $bom->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus resep ini?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-xs sharp shadow"><i class="fa fa-trash"></i></button>

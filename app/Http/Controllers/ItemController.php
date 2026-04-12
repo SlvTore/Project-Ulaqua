@@ -33,12 +33,13 @@ class ItemController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'          => 'required|string|max:255',
+            'name'          => 'required|string|max:255|unique:items,name',
             'sku'           => 'nullable|string|unique:items,sku',
             'category_id'   => 'required|exists:categories,id',
             'unit_id'       => 'required|exists:units,id',
             'min_alert'     => 'required|integer|min:0',
-            // default_price tidak di-required karena untuk barang jadi nilainya null/0
+        ], [
+            'name.unique' => 'Nama barang ini sudah pernah diregistrasikan. Tolong gunakan nama lain atau edit barang yang sudah ada.'
         ]);
 
         Item::create([
@@ -48,10 +49,20 @@ class ItemController extends Controller
             'unit_id'        => $request->unit_id,
             'min_alert'      => $request->min_alert,
             'expected_stock' => 0,
-            'default_price'  => $request->default_price ?? 0, // Ambil dari input JIKA ADA, jika tidak otomatis 0
+            'default_price'  => $request->default_price ?? 0,
         ]);
 
-        return redirect()->back()->with('success_item', 'Barang <b>'.$request->name.'</b> berhasil ditambahkan. Khusus untuk Barang Jadi, <a href="'.route('boms.create').'" class="text-white text-decoration-underline"><b>Jangan lupa atur Resep BOM-nya di sini!</b></a>');
+        // Deteksi kategori untuk menentukan pesan Success
+        $category = \App\Models\Category::find($request->category_id);
+        $isFinishedGood = str_contains(strtolower($category->name), 'jadi') || str_contains(strtolower($category->name), 'produk');
+
+        if ($isFinishedGood) {
+            $msg = 'Barang <b>'.$request->name.'</b> berhasil ditambahkan. Karena ini Barang Jadi, <a href="'.route('boms.create').'" class="text-white text-decoration-underline"><b>Jangan lupa atur Resep BOM-nya di sini!</b></a>';
+        } else {
+            $msg = 'Barang master <b>'.$request->name.'</b> berhasil ditambahkan ke dalam sistem.';
+        }
+
+        return redirect()->back()->with('success_item', $msg);
     }
 
     public function destroy($id)
@@ -79,11 +90,13 @@ class ItemController extends Controller
         $item = Item::findOrFail($id);
 
         $request->validate([
-            'name'          => 'required|string|max:255',
+            'name'          => 'required|string|max:255|unique:items,name,'.$id,
             'sku'           => 'nullable|string|unique:items,sku,'.$id,
             'category_id'   => 'required|exists:categories,id',
             'unit_id'       => 'required|exists:units,id',
             'min_alert'     => 'required|integer|min:0',
+        ], [
+            'name.unique' => 'Gagal mengubah karena nama tersebut sudah dipakai oleh produk master lain.'
         ]);
 
         // Simpan harga baru jika field tersebut dikirim (hanya dikirim jika kategori Bahan Baku)

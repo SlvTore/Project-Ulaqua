@@ -19,10 +19,10 @@ class BomController extends Controller
 
     public function create()
     {
-        // Hanya ambil item yang nama kategorinya mengandung kata "Jadi" / "Produk"
-        $finishedGoods = Item::whereHas('category', function ($q) {
+        // Hanya ambil item "Barang Jadi" YANG BELUM PUNYA BOM
+        $finishedGoods = \App\Models\Item::whereHas('category', function ($q) {
             $q->where('name', 'like', '%Jadi%')->orWhere('name', 'like', '%Produk%');
-        })->get();
+        })->doesntHave('boms')->get(); // <-- ini filter sakti anti-duplikat-nya
 
         // Hanya ambil item yang nama kategorinya mengandung kata "Bahan" / "Kemasan"
         $rawMaterials = Item::whereHas('category', function ($q) {
@@ -34,58 +34,63 @@ class BomController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi tanpa input 'name'
         $request->validate([
-            'item_id' => 'required|exists:items,id', // Produk Jadinya
-            'material_ids' => 'required|array|min:1',
-            'material_ids.*' => 'required|exists:items,id',
-            'quantities' => 'required|array|min:1',
-            'quantities.*' => 'required|numeric|min:0.01',
-            'prices' => 'required|array|min:1',       // Tambahkan validasi array Harga Custom
-            'prices.*' => 'required|numeric|min:0',
+            'item_id' => 'required|exists:items,id|unique:boms,item_id',
+            'calc_mode' => 'required|in:auto,manual',
+            'total_hpp' => 'required_if:calc_mode,manual|numeric|min:0',
+        ], [
+            'item_id.unique' => 'Produk ini SUDAH MEMILIKI resep Formula/BOM.',
         ]);
 
         try {
             DB::beginTransaction();
 
-            // Ambil data produk target
-            $targetItem = Item::findOrFail($request->item_id);
+            $targetItem = \App\Models\Item::findOrFail($request->item_id);
 
-            // 1. Simpan Data Induk BOM (Nama di-set otomatis)
-            $bom = Bom::create([
+            $bom = \App\Models\Bom::create([
                 'name' => 'BOM - ' . $targetItem->name,
                 'item_id' => $request->item_id,
             ]);
 
             $totalCost = 0;
 
-            // 2. Simpan Detail Bahan Baku dan hitung total Harga Pokok (HPP)
-            foreach ($request->material_ids as $index => $material_id) {
-                $qty = $request->quantities[$index];
-                $customPrice = $request->prices[$index]; // Ambil harga yang boleh diedit oleh user
+            // Jika mode AUTO: hitung dari bahan baku
+            if ($request->calc_mode === 'auto') {
+                if ($request->has('material_ids')) {
+                    foreach ($request->material_ids as $index => $material_id) {
+                        if (!$material_id) continue;
 
-                BomItem::create([
-                    'bom_id' => $bom->id,
-                    'item_id' => $material_id,
-                    'quantity' => $qty
-                ]);
+                        $qty = $request->quantities[$index] ?? 0;
+                        if ($qty <= 0) continue;
 
-                // Hitung total dengan harga custom yang ditarik dari form BOM
-                $totalCost += ($customPrice * $qty);
+                        $materialData = \App\Models\Item::find($material_id);
+                        $dbPrice = $materialData ? $materialData->default_price : 0;
+
+                        \App\Models\BomItem::create([
+                            'bom_id' => $bom->id,
+                            'item_id' => $material_id,
+                            'quantity' => $qty
+                        ]);
+
+                        $totalCost += ($dbPrice * $qty);
+                    }
+                }
+            } else {
+                // Jika mode MANUAL: Ambil langsung dari inputan teks yang diketik Anda!
+                $totalCost = str_replace(',', '', $request->total_hpp); // Bersihkan format ribuan
+                $totalCost = str_replace('.', '', $totalCost); // Jaga-jaga format titik
             }
 
-            // 3. Update Harga Produk Jadi (`default_price`) di master barang sesuai kalkulasi BOM!
-            $targetItem->update([
-                'default_price' => $totalCost
-            ]);
+            // Simpan harga Final ke target Item
+            $targetItem->update(['default_price' => $totalCost]);
 
             DB::commit();
             return redirect()->route('boms.index')
-                ->with('success', 'BOM berhasil dibuat. Harga Pokok (HPP) otomatis diatur berdasarkan form ke Rp ' . number_format($totalCost, 0, ',', '.'));
+                ->with('success', 'BOM tersimpan! Harga HPP menjadi Rp ' . number_format($totalCost, 0, ',', '.'));
 
         } catch (\Exception $e) {
             DB::rollback();
-            return back()->with('error', 'Gagal menyimpan BOM: ' . $e->getMessage());
+            return back()->with('error', 'Gagal: ' . $e->getMessage());
         }
     }
 
@@ -94,5 +99,91 @@ class BomController extends Controller
         // Hapus (otomatis menghapus bom_items karena on cascade di DB)
         Bom::findOrFail($id)->delete();
         return redirect()->route('boms.index')->with('success', 'Formula terhapus!');
+    }
+
+    public function edit($id)
+    {
+        $bom = \App\Models\Bom::with('components')->findOrFail($id);
+
+        // Ambil "Barang Jadi" YANG BELUM PUNYA BOM, ATAU (OR) Barang yang memang milik BOM ini (agar bisa muncul saat di-edit)
+        $finishedGoods = \App\Models\Item::whereHas('category', function ($q) {
+            $q->where('name', 'like', '%Jadi%')->orWhere('name', 'like', '%Produk%');
+        })->where(function ($q) use ($bom) {
+            $q->doesntHave('boms')->orWhere('id', $bom->item_id);
+        })->get();
+
+        $rawMaterials = \App\Models\Item::whereHas('category', function ($q) {
+            $q->where('name', 'like', '%Bahan%')->orWhere('name', 'like', '%Kemasan%')->orWhere('name', 'like', '%Mentah%');
+        })->get();
+
+        return view('warehouse.bom.edit', compact('bom', 'finishedGoods', 'rawMaterials'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        // 1. Sesuaikan Validasi untuk Mode Manual
+        $request->validate([
+            'item_id' => 'required|exists:items,id',
+            'calc_mode' => 'required|in:auto,manual',
+            'total_hpp' => 'nullable|numeric|min:0', // jika string bisa ditambahkan pembersihan format
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $bom = \App\Models\Bom::findOrFail($id);
+            $targetItem = \App\Models\Item::findOrFail($request->item_id);
+
+            // Update Master BOM
+            $bom->update([
+                'name' => 'BOM - ' . $targetItem->name,
+                'item_id' => $request->item_id,
+            ]);
+
+            // Selalu hapus racikan bahan baku lama saat diedit, untuk dimasukkan yang terbaru (kalau ada)
+            \App\Models\BomItem::where('bom_id', $bom->id)->delete();
+
+            $totalCost = 0;
+
+            // 2. Cek Mode Auto vs Manual
+            if ($request->calc_mode === 'auto') {
+                if ($request->has('material_ids')) {
+                    foreach ($request->material_ids as $index => $material_id) {
+                        if (!$material_id) continue;
+
+                        $qty = $request->quantities[$index] ?? 0;
+                        if ($qty <= 0) continue;
+
+                        // TARIK ULANG HARGA SAAT INI DARI DATABASE
+                        $materialData = \App\Models\Item::find($material_id);
+                        $dbPrice = $materialData ? $materialData->default_price : 0;
+
+                        \App\Models\BomItem::create([
+                            'bom_id' => $bom->id,
+                            'item_id' => $material_id,
+                            'quantity' => $qty
+                        ]);
+
+                        $totalCost += ($dbPrice * $qty); // Harga dijumlah otomatis
+                    }
+                }
+            } else {
+                // Kalkulasi Mode Manual HPP
+                $totalCost = str_replace(',', '', $request->total_hpp); // Bersihkan format ribuan
+                $totalCost = str_replace('.', '', $totalCost); // Jaga-jaga format titik yg mungkin ketik
+                $totalCost = (float) $totalCost;
+            }
+
+            // 3. Update Harga HPP Target Item (Barang Jadi)
+            $targetItem->update(['default_price' => $totalCost]);
+
+            DB::commit();
+            return redirect()->route('boms.index')
+                ->with('success', 'BOM berhasil diperbarui! HPP dikunci di Rp ' . number_format($totalCost, 0, ',', '.'));
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('error', 'Gagal memperbarui BOM: ' . $e->getMessage());
+        }
     }
 }

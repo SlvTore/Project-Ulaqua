@@ -8,11 +8,12 @@
 
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title">Buat Formula Master (BOM) & Kalkulasi Harga</h4>
+            <h4 class="card-title">Edit Formula Master (BOM): {{ $bom->name }}</h4>
         </div>
         <div class="card-body">
-            <form action="{{ route('boms.store') }}" method="POST" id="bomForm">
+            <form action="{{ route('boms.update', $bom->id) }}" method="POST" id="bomForm">
                 @csrf
+                @method('PUT')
                 <div class="row mb-4">
                     <div class="col-md-12 mb-3">
                         <div class="form-group">
@@ -20,12 +21,13 @@
                             <select name="item_id" class="form-control form-control-lg" required>
                                 <option value="">-- Pilih Barang Jadi --</option>
                                 @foreach($finishedGoods as $fg)
-                                    <option value="{{ $fg->id }}">{{ $fg->name }} (SKU: {{ $fg->sku }})</option>
+                                    <option value="{{ $fg->id }}" {{ $bom->item_id == $fg->id ? 'selected' : '' }}>{{ $fg->name }} (SKU: {{ $fg->sku }})</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
 
+                    <!-- Toggle Auto / Manual -->
                     <div class="col-md-12">
                         <label class="text-primary font-weight-bold">Mode Kalkulasi HPP:</label>
                         <div class="d-flex align-items-center form-group border p-3 rounded" style="background:#f8f9fa;">
@@ -50,7 +52,8 @@
                     <p class="text-muted fs-14">Masukkan Harga Pokok Produk (HPP) akhir secara eksplisit. Form resep bahan baku di bawah tidak akan diproses nominal harganya.</p>
                     <div class="input-group input-group-lg">
                         <span class="input-group-text bg-white">Rp</span>
-                        <input type="text" name="total_hpp" id="manualHPP" class="form-control text-success fw-bold fs-20" placeholder="0" value="0">
+                        <!-- Menarik Harga HPP saat ini -->
+                        <input type="text" name="total_hpp" id="manualHPP" class="form-control text-success fw-bold fs-20" placeholder="0" value="{{ (int)($bom->product->default_price ?? 0) }}">
                     </div>
                 </div>
 
@@ -60,21 +63,47 @@
                     </div>
 
                     <table class="table table-bordered mb-4" id="materialsTable">
-                        <!-- STRUKTUR TABEL ANDA (SAMA SEPERTI SEBELUMNYA) -->
                         <thead class="bg-light">
                             <tr>
                                 <th width="45%">Pilih Bahan Baku</th>
-                                <th width="20%">Harga Murni</th>
+                                <th width="20%">Harga Murni (Auto)</th>
                                 <th width="20%">Jml Kebutuhan</th>
                                 <th width="15%">Subtotal</th>
                             </tr>
                         </thead>
                         <tbody id="materialsBody">
-                            @for ($i = 0; $i < 3; $i++)
+                            <!-- Data Bahan Baku yang Sudah Tersimpan -->
+                            @foreach($bom->components as $index => $component)
+                            <tr>
+                                <td>
+                                    <select name="material_ids[]" class="form-control material-select" required>
+                                        <option value="" data-price="0">-- Bebas Pilih --</option>
+                                        @foreach($rawMaterials as $rm)
+                                            <option value="{{ $rm->id }}" data-price="{{ (int)$rm->default_price }}" {{ $component->item_id == $rm->id ? 'selected' : '' }}>
+                                                {{ $rm->name }} [Stok: {{ $rm->expected_stock }}]
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control item-price border-0 bg-transparent text-secondary font-weight-bold" value="{{ (int)$component->item->default_price }}" readonly>
+                                    <input type="hidden" name="prices[]" class="hidden-price" value="{{ (int)$component->item->default_price }}">
+                                </td>
+                                <td>
+                                    <input type="number" name="quantities[]" class="form-control item-qty" placeholder="Qty" step="0.01" min="0" value="{{ $component->quantity }}" required>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control item-subtotal bg-light border-0 text-success font-weight-bold" readonly value="{{ $component->item->default_price * $component->quantity }}">
+                                </td>
+                            </tr>
+                            @endforeach
+
+                            <!-- Ekstra Slot Kosong -->
+                            @for ($i = 0; $i < 2; $i++)
                             <tr>
                                 <td>
                                     <select name="material_ids[]" class="form-control material-select">
-                                        <option value="" data-price="0">-- Bebas Pilih --</option>
+                                        <option value="" data-price="0">-- Bebas Pilih (Slot Kosong) --</option>
                                         @foreach($rawMaterials as $rm)
                                             <option value="{{ $rm->id }}" data-price="{{ (int)$rm->default_price }}">
                                                 {{ $rm->name }} [Stok: {{ $rm->expected_stock }}]
@@ -107,11 +136,11 @@
                             </tr>
                         </tfoot>
                     </table>
-                </div> <!-- End Auto Section -->
+                </div>
 
                 <div class="mt-3 border-top pt-3 text-end">
                     <a href="{{ route('boms.index') }}" class="btn btn-danger light me-2">Batal</a>
-                    <button type="submit" class="btn btn-primary px-5">Simpan BOM & Terapkan Harga</button>
+                    <button type="submit" class="btn btn-primary px-5">Perbarui BOM & Terapkan Harga Baru</button>
                 </div>
             </form>
         </div>
@@ -119,8 +148,7 @@
 </div>
 @endsection
 
-@section('scripts')
-@push('scripts')
+@push('scripts') 
 <script>
     // Fitur Hide/Show Ceklak-Ceklik
     function toggleMode() {
@@ -163,7 +191,7 @@
     }
 
     $(document).ready(function() {
-        setInterval(runMathCalculations, 1000); // Polling JS yang sekarang PASTI berjalan!
+        setInterval(runMathCalculations, 1000); // Polling JS
 
         $(document).on('change', '.material-select', function() {
             var tr = $(this).closest('tr');
@@ -177,4 +205,3 @@
     });
 </script>
 @endpush
-@endsection
