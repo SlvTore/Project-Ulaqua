@@ -39,9 +39,9 @@
                     <span class="nav-text">Keuangan</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="#">Penjualan (Sales)</a></li>
+                    <li><a href="{{ route('sales.index') }}">Penjualan</a></li>
                     <li><a href="{{ route('productions.index') }}">Produksi</a></li>
-                    <li><a href="#">Laporan Arus Kas</a></li>
+                    <li><a href="{{ route('finance.reports.cashflow') }}">Laporan Arus Kas</a></li>
                 </ul>
             </li>
         </ul>

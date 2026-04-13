@@ -168,6 +168,21 @@
         @endforeach
     @endif
 
+    <!-- PELINDUNG ANTI DOUBLE-SUBMIT (Global UX Safety) -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('form').forEach(function(form) {
+                form.addEventListener('submit', function() {
+                    let submitBtn = this.querySelector('button[type="submit"]');
+                    if (submitBtn && !this.classList.contains('no-disable')) {
+                        submitBtn.setAttribute('disabled', 'disabled');
+                        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Sedang Memproses...';
+                    }
+                });
+            });
+        });
+    </script>
+
     @stack('scripts')
 
 

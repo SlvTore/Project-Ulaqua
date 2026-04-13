@@ -123,6 +123,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('/finance/productions', App\Http\Controllers\ProductionController::class);
 
+    // Route Penjualan (Kas Masuk Gudang / Finance Sales)
+    Route::resource('/finance/sales', App\Http\Controllers\SaleController::class);
+
+    // Route Report / Dashboard Arus Kas
+    Route::get('/finance/reports/cashflow', [App\Http\Controllers\FinanceReportController::class, 'dashboard'])->name('finance.reports.cashflow');
+
 }); // <-- (Pastikan ini diletakkan sebelum penutup middleware auth group)
 
 Auth::routes([
