@@ -35,7 +35,7 @@
                             <td>
                                 <a href="{{ route('boms.edit', $bom->id) }}" class="btn btn-primary btn-xs sharp shadow me-1"><i class="fa fa-pencil-alt"></i></a>
 
-                                <form action="{{ route('boms.destroy', $bom->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus resep ini?');">
+                                <form action="{{ route('boms.destroy', $bom->id) }}" method="POST" class="d-inline delete-form" data-confirm-message="Anda yakin ingin menghapus resep Bom ini? Tindakan ini akan mengarsipkannya secara aman.">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-xs sharp shadow"><i class="fa fa-trash"></i></button>

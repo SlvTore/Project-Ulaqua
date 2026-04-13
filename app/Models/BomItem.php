@@ -11,9 +11,9 @@ class BomItem extends Model
 
     protected $fillable = ['bom_id', 'item_id', 'quantity'];
 
-    // Relasi ke Bahan Baku
+    // Relasi ke barang (komponen/bahan baku penyusun resep)
     public function item()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Item::class)->withTrashed();
     }
 }

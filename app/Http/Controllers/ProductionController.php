@@ -41,8 +41,19 @@ class ProductionController extends Controller
         try {
             DB::beginTransaction();
 
-            // Ambil data resep dan produk jadinya
-            $bom = Bom::with('product')->findOrFail($request->bom_id);
+            // Ambil data resep dan mutasi komponen
+            $bom = Bom::with(['product', 'components.item'])->findOrFail($request->bom_id);
+
+            // 1. VALIDASI STOK BAHAN BAKU SEBELUM PRODUKSI (Pencegah Negatif Stok)
+            foreach ($bom->components as $component) {
+                // Gunakan lockForUpdate untuk mencegah Race Condition (Staf B menekan produksi bersamaan dgn Staf A)
+                $itemLock = \App\Models\Item::where('id', $component->item_id)->lockForUpdate()->first();
+                $materialQtyNeeded = $component->quantity * $request->quantity;
+
+                if ($itemLock->expected_stock < $materialQtyNeeded) {
+                    return back()->with('error', 'Produksi Gagal! Sisa ' . $itemLock->name . ' di gudang tinggal ' . $itemLock->expected_stock . ', tapi Anda membutuhkan ' . $materialQtyNeeded)->withInput();
+                }
+            }
 
             // Kalkulasi Total Biaya Pabrik (HPP Barang Jadi x Jumlah Produksi)
             $total_cost = $bom->product->default_price * $request->quantity;

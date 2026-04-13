@@ -168,23 +168,55 @@
         @endforeach
     @endif
 
-    <!-- PELINDUNG ANTI DOUBLE-SUBMIT (Global UX Safety) -->
+    <!-- SWEETALERT2 DARI CDN (Berjaga-jaga jika template Eres belum memuatnya secara global) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- PELINDUNG ANTI DOUBLE-SUBMIT & SWEETALERT GLOBAL -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll('form').forEach(function(form) {
+
+            // 1. Anti Double-Submit HANYA untuk Form biasa (Create/Update), BUKAN Form Delete
+            document.querySelectorAll('form:not(.delete-form)').forEach(function(form) {
                 form.addEventListener('submit', function() {
                     let submitBtn = this.querySelector('button[type="submit"]');
                     if (submitBtn && !this.classList.contains('no-disable')) {
                         submitBtn.setAttribute('disabled', 'disabled');
-                        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Sedang Memproses...';
+                        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Memproses...';
                     }
                 });
             });
+
+            // 2. Intersepsi SWEETALERT Khusus untuk Form Hapus / Batal
+            document.querySelectorAll('.delete-form').forEach(function(form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault(); // Hentikan form sementara waktu
+
+                    // Ambil teks peringatan dari atribut HTML
+                    let message = this.getAttribute('data-confirm-message') || 'Apakah Anda yakin ingin menghapus data ini?';
+
+                    Swal.fire({
+                        title: 'Konfirmasi Tindakan',
+                        text: message,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#28a745', // Hijau (Lanjut)
+                        cancelButtonColor: '#dc3545',  // Merah (Batal)
+                        confirmButtonText: '<i class="fa fa-check"></i> Ya, Lanjutkan!',
+                        cancelButtonText: '<i class="fa fa-times"></i> Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // JIKA DIKLIK YA DI SWEETALERT: Baru ubah tombol jadi loading dan submit form
+                            let submitBtn = this.querySelector('button[type="submit"]');
+                            if (submitBtn) {
+                                submitBtn.setAttribute('disabled', 'disabled');
+                                submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Menghapus...';
+                            }
+                            this.submit(); // Lanjutkan penghapusan Data
+                        }
+                        // Jika batal, maka tidak akan ada tombol muter / sistem berhenti dan kembali semula.
+                    });
+                });
+            });
+
         });
     </script>
-
-    @stack('scripts')
-
-
-</body>
-</html>

@@ -40,7 +40,7 @@
                             <td>{{ $prod->user->name }}</td>
                             <td class="text-center">
                                 <a href="{{ route('productions.edit', $prod->id) }}" class="btn btn-warning btn-xs sharp shadow text-white me-1"><i class="fa fa-pencil-alt"></i></a>
-                                <form action="{{ route('productions.destroy', $prod->id) }}" method="POST" class="d-inline" onsubmit="return confirm('ATENSI: Menghapus rekapan ini akan mengembalikan kembali stok barang-barang ke gudang! Lanjut batalkan Produksi ini?');">
+                                <form action="{{ route('productions.destroy', $prod->id) }}" method="POST" class="d-inline delete-form" data-confirm-message="ATENSI: Menghapus rekapan Produksi ini akan mengembalikan komponen bahan baku ke gudang! Lanjut batalkan?">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-xs sharp shadow"><i class="fa fa-trash"></i></button>

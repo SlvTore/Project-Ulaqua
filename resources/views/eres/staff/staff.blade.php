@@ -70,8 +70,8 @@
                                            data-bs-toggle="modal" data-bs-target="#editModal{{ $user->id }}">
                                            <i class="fas fa-pencil-alt"></i>
                                         </a>
-                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline"
-                                              onsubmit="return confirm('Yakin ingin menghapus pegawai ini?');">
+                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline delete-form"
+                                              data-confirm-message="Yakin ingin menghapus pegawai / staf ini?">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger shadow btn-xs sharp">

@@ -10,8 +10,8 @@ class Sale extends Model
         'reference_number', 'sale_date', 'item_id', 'quantity', 'price_per_unit', 'total_amount', 'user_id', 'notes'
     ];
 
-    public function item() { return $this->belongsTo(Item::class); }
-    public function user() { return $this->belongsTo(User::class); }
+    public function item() { return $this->belongsTo(Item::class)->withTrashed(); }
+    public function user() { return $this->belongsTo(User::class)->withTrashed(); }
 
     // Otomatis kurangi stok gudang (OUT) barang jadi saat tercatat
     protected static function booted()

@@ -44,7 +44,8 @@ class SaleController extends Controller
         try {
             DB::beginTransaction();
 
-            $item = Item::findOrFail($request->item_id);
+            // 1. Kunci data ini dari read/write tabrakan DB (Pessimistic Locking)
+            $item = Item::lockForUpdate()->findOrFail($request->item_id);
 
             // Cegah penjualan jika stok di gudang tidak mencukupi
             if ($item->expected_stock < $request->quantity) {
@@ -89,7 +90,7 @@ class SaleController extends Controller
     {
         $page_title = 'Koreksi (Edit) Penjualan';
         $sale = Sale::findOrFail($id);
-        
+
         // Filter yang sama untuk mode edit
         $items = Item::with(['category', 'unit'])
                     ->whereHas('category', function($q) {

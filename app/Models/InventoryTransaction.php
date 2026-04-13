@@ -13,13 +13,13 @@ class InventoryTransaction extends Model
     // Relasi ke Barang
     public function item()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Item::class)->withTrashed();
     }
 
     // Relasi ke Staf/Pembuat Catatan
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     // -----------------------------------------------------

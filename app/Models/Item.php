@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes; // 1. Tambahkan baris ini
 
 class Item extends Model
 {
+    use SoftDeletes; // 2. Tambahkan ini di atas 'protected $fillable'
+
     protected $fillable = [
         'name', 'sku', 'category_id', 'unit_id', 'min_alert', 'expected_stock', 'default_price', 'is_active'
     ];

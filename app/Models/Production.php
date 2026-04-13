@@ -11,9 +11,9 @@ class Production extends Model
         'reference_number', 'production_date', 'item_id', 'bom_id', 'quantity', 'total_cost', 'user_id', 'notes'
     ];
 
-    public function item() { return $this->belongsTo(Item::class); }
-    public function bom()  { return $this->belongsTo(Bom::class); }
-    public function user() { return $this->belongsTo(User::class); }
+    public function item() { return $this->belongsTo(Item::class)->withTrashed(); }
+    public function bom()  { return $this->belongsTo(Bom::class)->withTrashed(); }
+    public function user() { return $this->belongsTo(User::class)->withTrashed(); }
 
     // FUNGSI BANTUAN TRIGGER IN/OUT GUDANG
     public function generateTransactions()

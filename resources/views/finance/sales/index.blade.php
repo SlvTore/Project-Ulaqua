@@ -47,7 +47,7 @@
                             </td>
                             <td class="text-center">
                                 <a href="{{ route('sales.edit', $sale->id) }}" class="btn btn-warning btn-xs sharp shadow text-white me-1"><i class="fa fa-pencil-alt"></i></a>
-                                <form action="{{ route('sales.destroy', $sale->id) }}" method="POST" class="d-inline" onsubmit="return confirm('ATENSI: Membatalkan/menghapus transaksi penjualan ini akan mengembalikan stok produk jadi ke Gudang dan menghapus nilainya dari Laporan Arus Kas. Lanjutkan?');">
+                                <form action="{{ route('sales.destroy', $sale->id) }}" method="POST" class="d-inline delete-form" data-confirm-message="ATENSI: Membatalkan transaksi penjualan ini akan mengembalikan stok produk ke Gudang. Lanjutkan?">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-xs sharp shadow"><i class="fa fa-trash"></i></button>
