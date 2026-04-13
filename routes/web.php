@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\ClientController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EresAdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\CalendarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -129,7 +131,17 @@ Route::middleware(['auth'])->group(function () {
     // Route Report / Dashboard Arus Kas
     Route::get('/finance/reports/cashflow', [App\Http\Controllers\FinanceReportController::class, 'dashboard'])->name('finance.reports.cashflow');
 
-}); // <-- (Pastikan ini diletakkan sebelum penutup middleware auth group)
+    // Rute Kalender Klien (Pindahkan ke dalam sini, sebelum resource /clients)
+    Route::get('/clients/calendar', [CalendarController::class, 'index'])->name('clients.calendar');
+    Route::get('/clients/calendar/events', [CalendarController::class, 'getEvents'])->name('clients.calendar.events');
+    Route::post('/clients/calendar/store', [CalendarController::class, 'storeEvent'])->name('clients.calendar.store');
+    Route::post('/clients/calendar/update/{id}', [CalendarController::class, 'updateEventDrop'])->name('clients.calendar.update');
+    Route::delete('/clients/calendar/delete/{id}', [CalendarController::class, 'destroyEvent'])->name('clients.calendar.destroy');
+
+    Route::resource('/clients', \App\Http\Controllers\ClientController::class);
+    Route::patch('/clients/{id}/update-tag', [\App\Http\Controllers\ClientController::class, 'updateTag'])->name('clients.update_tag');
+    Route::patch('/clients/{id}/update-photo', [\App\Http\Controllers\ClientController::class, 'updatePhoto'])->name('clients.update_photo');
+});
 
 Auth::routes([
     'register' => false,
@@ -137,3 +149,4 @@ Auth::routes([
 ]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+

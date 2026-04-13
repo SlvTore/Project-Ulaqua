@@ -18,6 +18,18 @@
                 @csrf
 
                 <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label class="font-weight-bold text-primary">Nama Client / Pembeli (Opsional):</label>
+                        <select name="client_id" class="form-control form-control-lg default-select">
+                            <option value="">-- Pilih Client (Walk-in Customer) --</option>
+                            @foreach($clients as $client)
+                                <option value="{{ $client->id }}" {{ request('client_id') == $client->id ? 'selected' : '' }}>
+                                    {{ $client->name }} (#{{ $client->kode_client }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div class="col-md-6 mb-3">
                         <label class="font-weight-bold text-primary">Tanggal Penjualan:</label>
                         <input type="date" name="sale_date" class="form-control form-control-lg" value="{{ date('Y-m-d') }}" required>
@@ -45,6 +57,25 @@
                         <label class="font-weight-bold text-info">Harga Jual per Satuan (Rp):</label>
                         <input type="number" name="price_per_unit" class="form-control form-control-lg font-weight-bold text-info" id="price_per_unit" value="{{ old('price_per_unit') }}" min="0" placeholder="Rp ..." required>
                         <small class="text-danger">*Harga saran terisi otomatis dari HPP Master Barang. Anda bisa me-markup harga jual ini.</small>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="font-weight-bold text-warning">Status Pembayaran:</label>
+                        <select name="payment_status" class="form-control form-control-lg default-select" required>
+                            <option value="Lunas" selected>✅ Lunas (Cash/Transfer)</option>
+                            <option value="Belum Lunas">🕒 Belum Lunas</option>
+                            <option value="Termin">📊 Termin (Cicilan)</option>
+                            <option value="Jatuh Tempo">🚨 Jatuh Tempo</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="font-weight-bold text-secondary">Status Pengiriman:</label>
+                        <select name="delivery_status" class="form-control form-control-lg default-select" required>
+                            <option value="Selesai" selected>📦 Selesai (Sudah Diterima)</option>
+                            <option value="Diproses">⏳ Sedang Diproses</option>
+                            <option value="Dikirim">🚚 Sedang Dikirim</option>
+                        </select>
                     </div>
 
                     <div class="col-md-12 mb-3 mt-2">

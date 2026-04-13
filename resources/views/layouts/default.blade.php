@@ -220,3 +220,9 @@
 
         });
     </script>
+
+    <!-- TAMBAHKAN KODE INI DI SINI -->
+    @stack('scripts')
+
+</body>
+</html>

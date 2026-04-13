@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Sale extends Model
 {
     protected $fillable = [
-        'reference_number', 'sale_date', 'item_id', 'quantity', 'price_per_unit', 'total_amount', 'user_id', 'notes'
+        'reference_number', 'sale_date', 'item_id', 'quantity', 'price_per_unit', 'total_amount', 'user_id', 'notes',
+        'client_id', 'payment_status', 'delivery_status'
     ];
 
     public function item() { return $this->belongsTo(Item::class)->withTrashed(); }
     public function user() { return $this->belongsTo(User::class)->withTrashed(); }
+    public function client() { return $this->belongsTo(Client::class)->withTrashed(); }
 
     // Otomatis kurangi stok gudang (OUT) barang jadi saat tercatat
     protected static function booted()

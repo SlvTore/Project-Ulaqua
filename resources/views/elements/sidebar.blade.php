@@ -18,6 +18,16 @@
                 </ul>
             </li>
 
+            <li><a class="has-arrow ai-icon" href="javascript:void(0);" aria-expanded="false">
+                    <i class="flaticon-381-network"></i>
+                    <span class="nav-text">CRM & Klien</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{{ route('clients.index') }}">Daftar Klien</a></li>
+                    <li><a href="{{ route('clients.calendar') }}">Calendar</a></li>        <!-- Rute Calendar Menyusul -->
+                </ul>
+            </li>
+
             <!-- Menu WAREHOUSE -->
             <li><a class="has-arrow ai-icon" href="javascript:void(0);" aria-expanded="false">
                     <i class="flaticon-381-box-2"></i>

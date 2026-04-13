@@ -25,10 +25,10 @@
                         <tr>
                             <th>Tanggal Jual</th>
                             <th>No. Invoice</th>
-                            <th>Produk Terjual</th>
+                            <th>Klien / Produk</th>
                             <th class="text-center">Qty (Jumlah)</th>
-                            <th class="text-end">Harga Satuan</th>
-                            <th class="text-end">Total Kas Masuk</th>
+                            <th class="text-end">Total Tagihan</th>
+                            <th class="text-center">Status Kas & Kirim</th>
                             <th>Catatan</th>
                             <th class="text-center">Aksi / Batal</th>
                         </tr>
@@ -38,10 +38,33 @@
                         <tr>
                             <td>{{ \Carbon\Carbon::parse($sale->sale_date)->format('d M Y') }}</td>
                             <td><strong><span class="badge badge-success light">{{ $sale->reference_number }}</span></strong></td>
-                            <td>{{ $sale->item->name }}</td>
+                            <td>
+                                @if($sale->client)
+                                    <a class="text-primary font-weight-bold" href="{{ route('clients.show', $sale->client->id) }}">{{ $sale->client->name }}</a>
+                                @else
+                                    Customer Tunai
+                                @endif
+                                <br><small>{{ $sale->item->name }}</small>
+                            </td>
                             <td class="text-center font-weight-bold fs-16">{{ $sale->quantity }} {{ $sale->item->unit->name ?? '' }}</td>
-                            <td class="text-end">Rp {{ number_format($sale->price_per_unit, 0, ',', '.') }}</td>
                             <td class="text-end text-success font-weight-bold">Rp {{ number_format($sale->total_amount, 0, ',', '.') }}</td>
+                            <td class="text-center">
+                                @if($sale->payment_status == 'Lunas')
+                                    <span class="badge light badge-success"><i class="fa fa-check-circle me-1"></i> {{ $sale->payment_status }}</span>
+                                @elseif($sale->payment_status == 'Jatuh Tempo')
+                                    <span class="badge light badge-danger"><i class="fa fa-exclamation-triangle me-1"></i> {{ $sale->payment_status }}</span>
+                                @else
+                                    <span class="badge light badge-warning"><i class="fa fa-clock me-1"></i> {{ $sale->payment_status }}</span>
+                                @endif
+
+                                <br>
+
+                                @if($sale->delivery_status == 'Selesai')
+                                    <span class="badge light badge-primary mt-1"><i class="fa fa-box me-1"></i> {{ $sale->delivery_status }}</span>
+                                @else
+                                    <span class="badge light badge-secondary mt-1"><i class="fa fa-truck me-1"></i> {{ $sale->delivery_status }}</span>
+                                @endif
+                            </td>
                             <td class="text-muted text-truncate" style="max-width: 150px;" title="{{ $sale->notes }}">
                                 {{ $sale->notes ?: '-' }}
                             </td>

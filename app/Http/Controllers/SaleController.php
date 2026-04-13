@@ -5,15 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Sale;
 use App\Models\Item;
+use App\Models\Client;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class SaleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $page_title = 'Daftar Penjualan (Kas Masuk)';
-        $sales = Sale::with(['item', 'user'])->latest()->get();
+
+        $query = Sale::with(['item', 'user', 'client'])->latest();
+
+        if ($request->has('client_id')) {
+            $query->where('client_id', $request->client_id);
+        }
+
+        $sales = $query->get();
         return view('finance.sales.index', compact('page_title', 'sales'));
     }
 
@@ -28,16 +36,21 @@ class SaleController extends Controller
                           ->where('name', 'not like', '%Kemasan%');
                     })->get();
 
-        return view('finance.sales.create', compact('page_title', 'items'));
+        $clients = Client::all();
+
+        return view('finance.sales.create', compact('page_title', 'items', 'clients'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'sale_date'      => 'required|date',
+            'client_id'      => 'nullable|exists:clients,id',
             'item_id'        => 'required|exists:items,id',
             'quantity'       => 'required|numeric|min:1',
             'price_per_unit' => 'required|numeric|min:0',
+            'payment_status' => 'required|in:Lunas,Belum Lunas,Termin,Jatuh Tempo',
+            'delivery_status'=> 'required|in:Diproses,Dikirim,Selesai',
             'notes'          => 'nullable|string',
         ]);
 
@@ -62,10 +75,13 @@ class SaleController extends Controller
             Sale::create([
                 'reference_number' => $referenceNumber,
                 'sale_date'        => $request->sale_date,
+                'client_id'        => $request->client_id,
                 'item_id'          => $request->item_id,
                 'quantity'         => $request->quantity,
                 'price_per_unit'   => $request->price_per_unit,
                 'total_amount'     => $totalAmount,
+                'payment_status'   => $request->payment_status,
+                'delivery_status'  => $request->delivery_status,
                 'user_id'          => Auth::id() ?? 1,
                 'notes'            => $request->notes,
             ]);
