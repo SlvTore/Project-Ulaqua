@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,10 @@ use App\Http\Controllers\CalendarController;
 */
 
 Route::middleware(['auth'])->group(function () {
+    // Header Pulse Routes for AJAX Polling
+    Route::get('/api/header-pulse', [NotificationController::class, 'headerPulse'])->name('header.pulse');
+    Route::post('/api/notifications/mark-read', [NotificationController::class, 'markAsRead'])->name('notifications.markRead');
+
     Route::controller(App\Http\Controllers\EresAdminController::class)->group(function () {
         Route::get('/', 'dashboard');
         Route::get('/app-calender', 'app_calender');
@@ -149,4 +154,5 @@ Auth::routes([
 ]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 

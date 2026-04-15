@@ -1,463 +1,241 @@
 @extends('layouts.default')
 
+@push('css')
+<style>
+    /* 1. Container custom untuk memposisikan avatar naik ke atas cover */
+    .custom-avatar-container {
+        position: relative;
+        margin-top: -65px;
+        z-index: 10;
+        padding-left: 20px;
+    }
+
+    /* 2. Photo wrapper murni dari halaman Client tanpa campur tangan template Eres */
+    .photo-wrapper {
+        position: relative;
+        cursor: pointer;
+        width: 130px !important;
+        height: 130px !important;
+        min-width: 130px !important;
+        flex-shrink: 0; /* WAJIB: Mencegah flexbox membuat bentuknya menjadi persegi panjang */
+        overflow: hidden;
+        background-color: #fff;
+        border: 4px solid #fff;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border-radius: 10px; /* Kotak membulat */
+    }
+
+    .photo-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover !important;
+    }
+
+    .photo-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: 0.3s ease;
+        z-index: 5; /* WAJIB: Memastikan overlay ada di lapisan teratas di atas placeholder/gambar */
+    }
+
+    .photo-wrapper:hover .photo-overlay {
+        opacity: 1;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="container-fluid">
     <div class="row page-titles mx-0">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="javascript:void(0)">App</a></li>
-            <li class="breadcrumb-item active"><a href="javascript:void(0)">Profile</a></li>
+            <li class="breadcrumb-item"><a href="javascript:void(0)">Aplikasi</a></li>
+            <li class="breadcrumb-item active"><a href="javascript:void(0)">Profil</a></li>
         </ol>
     </div>
 
-    <!-- row -->
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="profile card card-body px-3 pt-3 pb-0">
-                <div class="profile-head">
-                    <div class="photo-content">
-                        <div class="cover-photo rounded"></div>
-                    </div>
-                    <div class="profile-info">
-                        <div class="profile-photo">
-                            <img src="{{asset('images/profile/profile.png')}}" class="img-fluid rounded-circle" alt="">
+    <!-- SEMUA DIBUNGKUS DALAM SATU FORM AGAR FOTO IKUT TERKIRIM -->
+    <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="row">
+
+            <!-- HEADER COVER -->
+            <div class="col-lg-12">
+                <div class="profile card card-body px-3 pt-3 pb-0">
+                    <div class="profile-head">
+                        <div class="photo-content ">
+                            <div class="cover-photo rounded"></div>
                         </div>
-                        <div class="profile-details">
-                            <div class="profile-name px-3 pt-2">
-                                <h4 class="text-primary mb-0">Mitchell C. Shay</h4>
-                                <p>UX / UI Designer</p>
+                        <div class="profile-info">
+
+                            <!-- Bagian Foto dengan Hover Effect (Versi Profile Client) -->
+                            <div class="profile-photo me-5">
+                                <!-- Klik pada kotak ini akan men-trigger profileUpload -->
+                                <div class="photo-wrapper rounded" onclick="document.getElementById('profileUpload').click()">
+                                    @if(Auth::check() && Auth::user()->avatar)
+                                        <!-- Jika user sudah punya foto, tampilkan fotonya -->
+                                        <img id="avatarPreview" src="{{ Auth::user()->avatar_url }}" width="130" height="130" style="object-fit: cover !important; width: 100%; height: 100%;" alt="Avatar">
+                                    @else
+                                        <!-- Jika belum, tampilkan frame placeholder ikon -->
+                                        <div id="avatarPlaceholder" class="bg-primary d-flex align-items-center justify-content-center text-white" style="width: 100%; height: 100%;">
+                                            <i class="flaticon-381-user-9 fa-4x"></i>
+                                        </div>
+                                        <!-- Image tag tersembunyi yang akan muncul otomatis saat user memilih file -->
+                                        <img id="avatarPreview" src="" width="250" height="250" style="object-fit: cover !important; width: 100%; height: 100%; display: none;" alt="Avatar">
+                                    @endif
+
+                                    <!-- Overlay Kamera saat di-hover -->
+                                    <div class="photo-overlay">
+                                        <i class="las la-camera fa-3x text-white"></i>
+                                    </div>
+                                </div>
+                                <!-- Input aslinya HANYA SATU file d-none -->
+                                <input type="file" id="profileUpload" name="avatar" class="d-none" accept="image/*" onchange="previewImage(event)">
                             </div>
-                            <div class="profile-email px-2 pt-2">
-                                <h4 class="text-muted mb-0">info@example.com</h4>
-                                <p>Email</p>
+
+                            <div class="profile-details">
+                                <div class="profile-name px-3 pt-2">
+                                    <h4 class="text-primary mb-0">{{ Auth::check() ? Auth::user()->name : 'Nama Pengguna' }}</h4>
+                                    <p>{{ Auth::check() ? (Auth::user()->roles->first()->name ?? 'Pengguna') : 'Peran' }}</p>
+                                </div>
+                                <div class="profile-email px-2 pt-2">
+                                    <h4 class="text-muted mb-0">{{ Auth::check() ? Auth::user()->email : 'email@contoh.com' }}</h4>
+                                    <p>Email</p>
+                                </div>
                             </div>
-                            <div class="dropdown ms-auto">
-                                <a href="javascript:void(0);" class="btn btn-primary light sharp" data-bs-toggle="dropdown" aria-expanded="true"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="18px" height="18px" viewBox="0 0 24 24" version="1.1"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><rect x="0" y="0" width="24" height="24"></rect><circle fill="#000000" cx="5" cy="12" r="2"></circle><circle fill="#000000" cx="12" cy="12" r="2"></circle><circle fill="#000000" cx="19" cy="12" r="2"></circle></g></svg></a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li class="dropdown-item"><a href="javascript:void(0);"><i class="fa fa-user-circle text-primary me-2"></i>View profile</a></li>
-                                    <li class="dropdown-item"><a href="javascript:void(0);"><i class="fa fa-users text-primary me-2"></i>Add to close friends</a> </li>
-                                    <li class="dropdown-item"><a href="javascript:void(0);"><i class="fa fa-plus text-primary me-2"></i>Add to group</a> </li>
-                                    <li class="dropdown-item"><a href="javascript:void(0);"><i class="fa fa-ban text-primary me-2"></i> Block</a></li>
-                                </ul>
-                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xl-4">
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="profile-statistics">
-                                <div class="text-center">
-                                    <div class="row">
-                                        <div class="col">
-                                            <h3 class="m-b-0">150</h3><span>Follower</span>
-                                        </div>
-                                        <div class="col">
-                                            <h3 class="m-b-0">140</h3><span>Place Stay</span>
-                                        </div>
-                                        <div class="col">
-                                            <h3 class="m-b-0">45</h3><span>Reviews</span>
-                                        </div>
-                                    </div>
-                                    <div class="mt-4">
-                                        <a href="javascript:void(0);" class="btn btn-primary mb-1 me-1">Follow</a>
-                                        <a href="javascript:void(0);" class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#sendMessageModal">Send Message</a>
-                                    </div>
-                                </div>
-                                <!-- Modal -->
 
+            <!-- BIODATA FORM -->
+            <div class="col-xl-12">
+                <!-- Pesan Sukses/Error (Akan menyesuaikan grid dengan baik) -->
+                @if(session('success'))
+                    <div class="alert alert-success solid alert-dismissible fade show">
+                        <strong>Berhasil!</strong> {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close"></button>
+                    </div>
+                @endif
+                @if ($errors->any())
+                    <div class="alert alert-danger solid alert-dismissible fade show">
+                        <strong>Gagal!</strong> Tolong periksa form Anda.
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close"></button>
+                    </div>
+                @endif
+
+                <div class="card">
+                    <div class="card-header border-0 pb-0">
+                        <h4 class="fs-20 font-w600 text-primary">Detail Pribadi</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-6 col-lg-6 col-md-12 mb-3">
+                                <label class="form-label font-w600">Nama Depan<span class="text-danger ms-1">*</span></label>
+                                <input type="text" class="form-control" name="first_name" value="{{ Auth::check() ? Auth::user()->name : '' }}" placeholder="Masukkan nama depan Anda" required>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 mb-3">
+                                <label class="form-label font-w600">Nama Belakang</label>
+                                <input type="text" class="form-control" name="last_name" value="{{ Auth::check() ? Auth::user()->last_name : '' }}" placeholder="Masukkan nama belakang Anda">
+                            </div>
+
+                            <div class="col-xl-6 col-lg-6 col-md-12 mb-3">
+                                <label class="form-label font-w600">Alamat Email<span class="text-danger ms-1">*</span></label>
+                                <input type="email" class="form-control bg-light" name="email" value="{{ Auth::check() ? Auth::user()->email : '' }}" readonly>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 mb-3">
+                                <label class="form-label font-w600">No. Handphone</label>
+                                <input type="text" class="form-control" name="phone" value="{{ Auth::check() ? Auth::user()->phone : '' }}" placeholder="Contoh: 08123456789">
+                            </div>
+
+                            <div class="col-xl-6 col-lg-6 col-md-12 mb-3">
+                                <label class="form-label font-w600">Jenis Kelamin</label>
+                                <select class="form-control default-select form-select" name="gender">
+                                    <option value="" {{ (Auth::check() && empty(Auth::user()->gender)) ? 'selected' : '' }} disabled>Pilih salah satu</option>
+                                    <option value="Male" {{ (Auth::check() && Auth::user()->gender == 'Male') ? 'selected' : '' }}>Laki-laki</option>
+                                    <option value="Female" {{ (Auth::check() && Auth::user()->gender == 'Female') ? 'selected' : '' }}>Perempuan</option>
+                                    <option value="Other" {{ (Auth::check() && Auth::user()->gender == 'Other') ? 'selected' : '' }}>Lainnya</option>
+                                </select>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 mb-3">
+                                <label class="form-label font-w600">Tanggal Lahir</label>
+                                <input type="date" class="form-control" name="dob" value="{{ Auth::check() ? Auth::user()->dob : '' }}">
+                            </div>
+
+                            <div class="col-xl-6 col-lg-6 col-md-12 mb-3">
+                                <label class="form-label font-w600">Gelar / Kualifikasi</label>
+                                <input type="text" class="form-control" name="degree" value="{{ Auth::check() ? Auth::user()->degree : '' }}" placeholder="mis. S1 Keperawatan">
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 mb-3">
+                                <label class="form-label font-w600">Jabatan / Peran</label>
+                                <input type="text" class="form-control" name="designation" value="{{ Auth::check() ? Auth::user()->designation : '' }}" placeholder="mis. Admin Data">
+                            </div>
+
+                            <div class="col-xl-12 mb-3">
+                                <label class="form-label font-w600">Alamat Lengkap</label>
+                                <textarea class="form-control" name="address" rows="3" placeholder="Masukkan alamat lengkap Anda">{{ Auth::check() ? Auth::user()->address : '' }}</textarea>
+                            </div>
+
+                            <div class="col-xl-12 mb-3">
+                                <label class="form-label font-w600">Tentang Saya</label>
+                                <textarea class="form-control" name="about" rows="4" placeholder="Ceritakan singkat tentang diri Anda...">{{ Auth::check() ? Auth::user()->about : '' }}</textarea>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="profile-blog">
-                                <h5 class="text-primary d-inline">Today Highlights</h5>
-                                <img src="{{asset('images/profile/1.jpg')}}" alt="" class="img-fluid mt-4 mb-4 w-100">
-                                <h4><a href="{{url('post-details')}}" class="text-black">Darwin Creative Agency Theme</a></h4>
-                                <p class="mb-0">A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
+
+                <!-- EXTRAS: Education & Experience -->
+                <div class="card" style="margin-bottom: 30px;">
+                    <div class="card-header border-0 pb-0">
+                        <h4 class="fs-20 font-w600 text-primary">Pengalaman & Pendidikan</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12 mb-3">
+                                <label class="form-label font-w600">Latar Belakang Pendidikan</label>
+                                <textarea class="form-control" name="education" rows="3" placeholder="Contoh: S1 Biologi di ITB (2014)&#10;SMA Negeri 1 Jakarta (2010)">{{ Auth::check() ? Auth::user()->education : '' }}</textarea>
+                            </div>
+                            <div class="col-xl-12 mb-4">
+                                <label class="form-label font-w600">Pengalaman Kerja</label>
+                                <textarea class="form-control" name="experience" rows="3" placeholder="Contoh: Asisten Lab di RS Mitra (2018-Sekarang)&#10;Staf Administrasi di Klinik Sehat (2015-2018)">{{ Auth::check() ? Auth::user()->experience : '' }}</textarea>
+                            </div>
+                            <div class="col-xl-12 text-end">
+                                <button type="submit" class="btn btn-primary mb-2"><i class="fa fa-save me-2"></i> Perbarui dan Simpan Seluruh Data</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="profile-interest">
-                                <h5 class="text-primary d-inline">Interest</h5>
-                                <div class="row mt-4 sp4" id="lightgallery">
-                                    <a href="{{asset('images//profile/2.jpg')}}"  data-src="{{asset('images/profile/2.jpg')}}" class=" lg-item mb-1 col-lg-4 col-xl-4 col-sm-4 col-6">
-                                        <img src="{{asset('images/profile/2.jpg')}}" alt="" class="img-fluid">
-                                    </a>
-                                    <a href="{{asset('images//profile/3.jpg')}}"  data-src="{{asset('images/profile/3.jpg')}}" class=" lg-item mb-1 col-lg-4 col-xl-4 col-sm-4 col-6">
-                                        <img src="{{asset('images/profile/3.jpg')}}" alt="" class="img-fluid">
-                                    </a>
-                                    <a href="{{asset('images//profile/4.jpg')}}" data-src="{{asset('images/profile/4.jpg')}}" class=" lg-item mb-1 col-lg-4 col-xl-4 col-sm-4 col-6">
-                                        <img src="{{asset('images/profile/4.jpg')}}" alt="" class="img-fluid">
-                                    </a>
-                                    <a href="{{asset('images//profile/3.jpg')}}" data-src="{{asset('images/profile/3.jpg')}}" class=" lg-item mb-1 col-lg-4 col-xl-4 col-sm-4 col-6">
-                                        <img src="{{asset('images/profile/3.jpg')}}" alt="" class="img-fluid">
-                                    </a>
-                                    <a href="{{asset('images//profile/4.jpg')}}" data-src="{{asset('images/profile/4.jpg')}}" class=" lg-item mb-1 col-lg-4 col-xl-4 col-sm-4 col-6">
-                                        <img src="{{asset('images/profile/4.jpg')}}" alt="" class="img-fluid">
-                                    </a>
-                                    <a href="{{asset('images//profile/2.jpg')}}" data-src="{{asset('images/profile/2.jpg')}}" class=" lg-item mb-1 col-lg-4 col-xl-4 col-sm-4 col-6">
-                                        <img src="{{asset('images/profile/2.jpg')}}" alt="" class="img-fluid">
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="profile-news">
-                                <h5 class="text-primary d-inline">Our Latest News</h5>
-                                <div class="media pt-3 pb-3">
-                                    <img src="{{asset('images/profile/5.jpg')}}" alt="image" class="me-3 rounded" width="75">
-                                    <div class="media-body">
-                                        <h5 class="m-b-5"><a href="{{url('post-details')}}" class="text-black">Gene Therapy Triumph: Curing Incurable Diseases!</a></h5>
-                                        <p class="mb-0">I shared this on my twitter wall a few months back, and I thought.</p>
-                                    </div>
-                                </div>
-                                <div class="media pt-3 pb-3">
-                                    <img src="{{asset('images/profile/6.jpg')}}" alt="image" class="me-3 rounded" width="75">
-                                    <div class="media-body">
-                                        <h5 class="m-b-5"><a href="{{url('post-details')}}" class="text-black">Hospital Outreach Program Boosts Community Health</a></h5>
-                                        <p class="mb-0">I shared this on my fb wall a few months back, and I thought.</p>
-                                    </div>
-                                </div>
-                                <div class="media pt-3 pb-3">
-                                    <img src="{{asset('images/profile/7.jpg')}}" alt="image" class="me-3 rounded" width="75">
-                                    <div class="media-body">
-                                        <h5 class="m-b-5"><a href="{{url('post-details')}}" class="text-black">AI Diagnosis: A Game-Changer in Patient Care</a></h5>
-                                        <p class="mb-0">I shared this on my insta wall a few week back, and I thought.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
-        <div class="col-xl-8">
-            <div class="card h-auto">
-                <div class="card-body">
-                    <div class="profile-tab">
-                        <div class="custom-tab-1">
-                            <ul class="nav nav-tabs">
-                                <li class="nav-item"><a href="#my-posts" data-bs-toggle="tab" class="nav-link active show">Posts</a>
-                                </li>
-                                <li class="nav-item"><a href="#about-me" data-bs-toggle="tab" class="nav-link">About Me</a>
-                                </li>
-                                <li class="nav-item"><a href="#profile-settings" data-bs-toggle="tab" class="nav-link">Setting</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content">
-                                <div id="my-posts" class="tab-pane fade active show">
-                                    <div class="my-post-content pt-3">
-                                        <div class="post-input">
-                                            <textarea name="textarea" id="textarea" cols="30" rows="5" class="form-control bg-transparent" placeholder="Please type what you want...."></textarea>
-                                            <a href="javascript:void(0);" class="btn btn-primary light me-1 px-3" data-bs-toggle="modal" data-bs-target="#linkModal"><i class="fa fa-link m-0"></i> </a>
-                                            <!-- Modal -->
-
-                                            <a href="javascript:void(0);" class="btn btn-primary light me-1 px-3" data-bs-toggle="modal" data-bs-target="#cameraModal"><i class="fa fa-camera m-0"></i> </a>
-                                            <!-- Modal -->
-
-                                            <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#postModal">Post</a>
-                                            <!-- Modal -->
-
-                                        </div>
-                                        <div class="profile-uoloaded-post border-bottom-1 pb-5">
-                                            <img src="{{asset('images/profile/8.jpg')}}" alt="" class="img-fluid w-100 rounded">
-                                            <a class="post-title" href="{{url('post-details')}}"><h3 class="text-black">Gene Therapy Triumph: Curing Incurable Diseases!</h3></a>
-                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it.</p>
-                                            <button class="btn btn-primary me-2"><span class="me-2"><i
-                                                        class="fa fa-heart"></i></span>Like</button>
-                                            <button class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#replyModal"><span class="me-2"><i
-                                                        class="fa fa-reply"></i></span>Reply</button>
-                                        </div>
-                                        <div class="profile-uoloaded-post border-bottom-1 pb-5">
-                                            <img src="{{asset('images/profile/9.jpg')}}" alt="" class="img-fluid w-100 rounded">
-                                            <a class="post-title" href="{{url('post-details')}}"><h3 class="text-black">Medical Advancement: Cutting-Edge Robotic Surgeries Revolutionize Treatment</h3></a>
-                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it.</p>
-                                            <button class="btn btn-primary me-2"><span class="me-2"><i
-                                                        class="fa fa-heart"></i></span>Like</button>
-                                            <button class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#replyModal"><span class="me-2"><i
-                                                        class="fa fa-reply"></i></span>Reply</button>
-                                        </div>
-                                        <div class="profile-uoloaded-post pb-3">
-                                            <img src="{{asset('images/profile/8.jpg')}}" alt="" class="img-fluid w-100 rounded">
-                                            <a class="post-title" href="{{url('post-details')}}"><h3 class="text-black">Breaking Barriers: Hospital's Innovative Research Marks a Turning Point in Healthcare</h3></a>
-                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it.</p>
-                                            <button class="btn btn-primary me-2"><span class="me-2"><i
-                                                        class="fa fa-heart"></i></span>Like</button>
-                                            <button class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#replyModal"><span class="me-2"><i
-                                                        class="fa fa-reply"></i></span>Reply</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="about-me" class="tab-pane fade">
-                                    <div class="profile-about-me">
-                                        <div class="pt-4 border-bottom-1 pb-3">
-                                            <h4 class="text-primary">About Me</h4>
-                                            <p class="mb-2">A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart. I am alone, and feel the charm of existence was created for the bliss of souls like mine.I am so happy, my dear friend, so absorbed in the exquisite sense of mere tranquil existence, that I neglect my talents.</p>
-                                            <p>A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame.</p>
-                                        </div>
-                                    </div>
-                                    <div class="profile-skills mb-5">
-                                        <h4 class="text-primary mb-2">Skills</h4>
-                                        <a href="javascript:void(0);" class="btn btn-primary light btn-xs mb-1">Admin</a>
-                                        <a href="javascript:void(0);" class="btn btn-primary light btn-xs mb-1">Dashboard</a>
-                                        <a href="javascript:void(0);" class="btn btn-primary light btn-xs mb-1">Photoshop</a>
-                                        <a href="javascript:void(0);" class="btn btn-primary light btn-xs mb-1">Bootstrap</a>
-                                        <a href="javascript:void(0);" class="btn btn-primary light btn-xs mb-1">Responsive</a>
-                                        <a href="javascript:void(0);" class="btn btn-primary light btn-xs mb-1">Crypto</a>
-                                    </div>
-                                    <div class="profile-lang  mb-5">
-                                        <h4 class="text-primary mb-2">Language</h4>
-                                        <a href="javascript:void(0);" class="text-muted pe-3 f-s-16"><i class="flag-icon flag-icon-us"></i> English</a>
-                                        <a href="javascript:void(0);" class="text-muted pe-3 f-s-16"><i class="flag-icon flag-icon-fr"></i> French</a>
-                                        <a href="javascript:void(0);" class="text-muted pe-3 f-s-16"><i class="flag-icon flag-icon-bd"></i> Bangla</a>
-                                    </div>
-                                    <div class="profile-personal-info">
-                                        <h4 class="text-primary mb-4">Personal Information</h4>
-                                        <div class="row mb-2">
-                                            <div class="col-sm-3 col-5">
-                                                <h5 class="f-w-500">Name <span class="pull-end">:</span>
-                                                </h5>
-                                            </div>
-                                            <div class="col-sm-9 col-7"><span>Mitchell C.Shay</span>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-2">
-                                            <div class="col-sm-3 col-5">
-                                                <h5 class="f-w-500">Email <span class="pull-end">:</span>
-                                                </h5>
-                                            </div>
-                                            <div class="col-sm-9 col-7"><span>example@examplel.com</span>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-2">
-                                            <div class="col-sm-3 col-5">
-                                                <h5 class="f-w-500">Availability <span class="pull-end">:</span></h5>
-                                            </div>
-                                            <div class="col-sm-9 col-7"><span>Full Time (Free Lancer)</span>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-2">
-                                            <div class="col-sm-3 col-5">
-                                                <h5 class="f-w-500">Age <span class="pull-end">:</span>
-                                                </h5>
-                                            </div>
-                                            <div class="col-sm-9 col-7"><span>27</span>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-2">
-                                            <div class="col-sm-3 col-5">
-                                                <h5 class="f-w-500">Location <span class="pull-end">:</span></h5>
-                                            </div>
-                                            <div class="col-sm-9 col-7"><span>Rosemont Avenue Melbourne,
-                                                    Florida</span>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-2">
-                                            <div class="col-sm-3 col-5">
-                                                <h5 class="f-w-500">Year Experience <span class="pull-end">:</span></h5>
-                                            </div>
-                                            <div class="col-sm-9 col-7"><span>07 Year Experiences</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="profile-settings" class="tab-pane fade">
-                                    <div class="pt-3">
-                                        <div class="settings-form">
-                                            <h4 class="text-primary">Account Setting</h4>
-                                            <form>
-                                                @csrf
-                                                <div class="row">
-                                                    <div class="mb-3 col-md-6">
-                                                        <label class="form-label">Email</label>
-                                                        <input type="email" placeholder="Email" class="form-control">
-                                                    </div>
-                                                    <div class="mb-3 col-md-6">
-                                                        <label class="form-label">Password</label>
-                                                        <input type="password" placeholder="Password" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Address</label>
-                                                    <input type="text" placeholder="1234 Main St" class="form-control">
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Address 2</label>
-                                                    <input type="text" placeholder="Apartment, studio, or floor" class="form-control">
-                                                </div>
-                                                <div class="row">
-                                                    <div class="mb-3 col-md-6">
-                                                        <label class="form-label">City</label>
-                                                        <input type="text" class="form-control">
-                                                    </div>
-                                                    <div class="mb-3 col-md-4">
-                                                        <label class="form-label">State</label>
-                                                        <select class="form-control default-select wide" id="inputState">
-                                                            <option selected="">Choose...</option>
-                                                            <option>Option 1</option>
-                                                            <option>Option 2</option>
-                                                            <option>Option 3</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="mb-3 col-md-2">
-                                                        <label class="form-label">Zip</label>
-                                                        <input type="text" class="form-control">
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <div class="form-check custom-checkbox">
-                                                        <input type="checkbox" class="form-check-input" id="gridCheck">
-                                                        <label class="form-check-label form-label" for="gridCheck"> Check me out</label>
-                                                    </div>
-                                                </div>
-                                                <button class="btn btn-primary" type="submit">Sign
-                                                    in</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Modal -->
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    </form>
 </div>
 @endsection
-@push('modals')
-<div class="modal fade" id="sendMessageModal">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Send Message</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form class="comment-form">
-                    @csrf
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="mb-3">
-                                <label class="text-black font-w600 form-label">Name <span class="required">*</span></label>
-                                <input type="text" class="form-control" value="Author" name="Author" placeholder="Author">
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="mb-3">
-                                <label class="text-black font-w600 form-label">Email <span class="required">*</span></label>
-                                <input type="text" class="form-control" value="Email" placeholder="Email" name="Email">
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="mb-3">
-                                <label class="text-black font-w600 form-label">Comment</label>
-                                <textarea rows="8" class="form-control" name="comment" placeholder="Comment"></textarea>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="mb-3 mb-0">
-                                <input type="submit" value="Post Comment" class="submit btn btn-primary" name="submit">
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="linkModal">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Social Links</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal">
-                </button>
-            </div>
-            <div class="modal-body">
-                <a class="btn-social facebook" href="javascript:void(0)"><i class="fab fa-facebook-f"></i></a>
-                <a class="btn-social google-plus" href="javascript:void(0)"><i class="fab fa-google-plus-g"></i></a>
-                <a class="btn-social linkedin" href="javascript:void(0)" ><i class="fab fa-linkedin-in"></i></a>
-                <a class="btn-social instagram" href="javascript:void(0)"><i class="fab fa-instagram"></i></a>
-                <a class="btn-social twitter" href="javascript:void(0)"><i class="fab fa-twitter"></i></a>
-                <a class="btn-social youtube" href="javascript:void(0)"><i class="fab fa-youtube"></i></a>
-                <a class="btn-social whatsapp" href="javascript:void(0)"><i class="fab fa-whatsapp"></i></a>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="cameraModal">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Upload images</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal">
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="input-group mb-3 flex-nowrap">
-                    <span class="input-group-text rounded-sm">Upload</span>
-                    <div class="form-file border-s-1 overflow-hidden">
-                        <input type="file" class="form-file-input form-control">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="postModal">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Post</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal">
-                </button>
-            </div>
-            <div class="modal-body">
-                    <textarea name="textarea" id="textarea2" cols="30" rows="5" class="form-control bg-transparent" placeholder="Please type what you want...."></textarea>
-                    <a class="btn btn-primary" href="javascript:void(0)">Post</a>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="replyModal">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Post Reply</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    @csrf
-                    <textarea class="form-control" rows="4">Message</textarea>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger light" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Reply</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+@push('scripts')
+<script>
+    // Penanganan preview file di browser pengguna sebelum diupload
+    function previewImage(event) {
+        var input = event.target;
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var previewId = document.getElementById('avatarPreview');
+                previewId.src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 @endpush
 

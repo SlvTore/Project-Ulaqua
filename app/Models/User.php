@@ -9,10 +9,12 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes; // Tambahkan
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes; // Tambahkan
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes, LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -21,9 +23,19 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'last_name',
         'email',
         'password',
         'address', // <-- Tambahkan ini
+        'phone',
+        'gender',
+        'dob',
+        'degree',
+        'designation',
+        'about',
+        'education',
+        'experience',
+        'avatar', // <-- Penting untuk foto
     ];
 
     /**
@@ -45,4 +57,32 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Konfigurasi opsi logging otomatis
+     *
+     * @return \Spatie\Activitylog\LogOptions
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('user_activity') // <-- Ubah logName menjadi useLogName
+            ->logFillable()    // Catat perubahan pada kolom fillable
+            ->logOnlyDirty()   // Hanya catat yang berubah saja
+            ->dontSubmitEmptyLogs();
+    }
+
+    /**
+     * Accessor untuk mendapatkan URL Avatar dengan benar
+     * Jika null, lemparkan gambar default (profile.png)
+     */
+    public function getAvatarUrlAttribute()
+    {
+        if ($this->avatar && \Storage::disk('public')->exists('avatars/' . $this->avatar)) {
+            return asset('storage/avatars/' . $this->avatar);
+        }
+
+        // Gambar default jika belum upload foto
+        return asset('images/profile/profile.png');
+    }
 }

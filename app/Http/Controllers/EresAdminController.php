@@ -8,8 +8,84 @@ class EresAdminController extends Controller
 {
     public function dashboard(){
 		$page_title = 'Dashboard';
-        $page_description = 'Some description for the page';
-		return view('eres.dashboard.index', compact('page_title', 'page_description'));
+        $page_description = 'Overview Operasional Ulaqua';
+
+        // 1. KPI Counts
+        $totalClients = \App\Models\Client::count();
+        $totalSales = \App\Models\Sale::count();
+        $totalItems = \App\Models\Item::count();
+        $revenue = \App\Models\Sale::sum('total_amount');
+
+        // 2. Widget Jajaran Pimpinan (Menggantikan Top Rated Doctors)
+        $leaders = \App\Models\User::whereNotNull('designation')
+            ->where(function($query) {
+                $query->where('designation', 'LIKE', '%Direktur%')
+                      ->orWhere('designation', 'LIKE', '%Manager%')
+                      ->orWhere('designation', 'LIKE', '%Manajer%')
+                      ->orWhere('designation', 'LIKE', '%Kepala%')
+                      ->orWhere('designation', 'LIKE', '%CEO%');
+            })->take(8)->get();
+
+        // Fallback jika belum ada yang jabatannya direktur/manager, ambil user biasa
+        if ($leaders->isEmpty()) {
+            $leaders = \App\Models\User::take(8)->get();
+        }
+
+        // 3. Widget Penjualan Terbaru (Menggantikan Recent Patients)
+        $recentSales = \App\Models\Sale::with('client')->orderBy('created_at', 'desc')->take(6)->get();
+
+        // 4. Data Top 3 Produk Terlaris (Berdasarkan jumlah quantity terjual)
+        $topProducts = \App\Models\Sale::select('item_id', \DB::raw('SUM(quantity) as total_sold'))
+                        ->with(['item.category'])
+                        ->groupBy('item_id')
+                        ->orderByDesc('total_sold')
+                        ->take(3)
+                        ->get();
+
+        // 5. Kalkulasi Gross Profit Margin (Menggunakan data HPP dari tabel Production jika ada)
+        // Hitung rata-rata biaya produksi per item
+        $itemCosts = \App\Models\Production::select('item_id', \DB::raw('SUM(total_cost) / NULLIF(SUM(quantity), 0) as avg_cost'))
+                        ->groupBy('item_id')
+                        ->pluck('avg_cost', 'item_id');
+
+        $totalHpp = 0;
+        $allSales = \App\Models\Sale::all();
+        foreach ($allSales as $sale) {
+            // Jika ada data biaya produksi (HPP asli), gunakan itu. Jika tidak, gunakan estimasi default 45% dari harga jual
+            $costPerUnit = $itemCosts[$sale->item_id] ?? ($sale->price_per_unit * 0.45);
+            $totalHpp += ($costPerUnit * $sale->quantity);
+        }
+
+        // Tidak menggunakan data operasional fiktif agar laporan margin akurat (Laba Kotor)
+        $grossProfit = $revenue - $totalHpp;
+
+        // Persentase perhitungan (hindari division by zero)
+        $hppPercentage = $revenue > 0 ? round(($totalHpp / $revenue) * 100) : 0;
+        $profitPercentage = $revenue > 0 ? round(($grossProfit / $revenue) * 100) : 0;
+
+        // 6. Data Chart Statistik Revenue (6 Bulan Terakhir)
+        $sixMonthsAgo = now()->subMonths(6)->startOfMonth();
+        $salesByMonth = \App\Models\Sale::where('sale_date', '>=', $sixMonthsAgo)
+            ->orderBy('sale_date', 'asc')
+            ->get()
+            ->groupBy(function($val) {
+                return \Carbon\Carbon::parse($val->sale_date)->format('M Y');
+            });
+
+        $revenueLabels = [];
+        $revenueValues = [];
+        foreach ($salesByMonth as $month => $sales) {
+            $revenueLabels[] = $month;
+            $revenueValues[] = $sales->sum('total_amount');
+        }
+
+		return view('eres.dashboard.index', compact(
+            'page_title', 'page_description', 'totalClients', 'totalSales', 'totalItems',
+            'revenue', 'leaders', 'recentSales', 'topProducts',
+            'totalHpp', 'grossProfit',
+            'hppPercentage', 'profitPercentage',
+            'revenueLabels', 'revenueValues'
+        ));
 	}
 
     public function dashboard_2(){
