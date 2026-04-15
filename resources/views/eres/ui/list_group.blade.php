@@ -599,3 +599,4 @@ Morbi leo risus &lt;span class="badge badge-primary badge-pill"&gt;1&lt;/span&gt
         });
 	</script>
 @endpush
+

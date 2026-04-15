@@ -55,3 +55,29 @@
     </div>
 </div>
 @endsection
+@push('scripts')
+<script src="{{ asset('vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
+<script>
+    (function($) {
+        "use strict"
+        $('#example3').DataTable({
+            language: {
+                paginate: {
+                  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>' 
+                },
+                lengthMenu: "Tampilkan _MENU_ produksi",
+                search: "Cari Produksi:",
+                info: "Menampilkan _START_ s/d _END_ dari _TOTAL_ daftar produksi",
+                emptyTable: "Belum ada rekapan produksi."
+            }
+        });
+    })(jQuery);
+</script>
+<link href="{{ asset('vendor/datatables/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+<style>
+    .dataTables_wrapper .dataTables_paginate .paginate_button { padding: 0.5rem 0.5rem; }
+    .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter { margin-bottom: 20px; }
+</style>
+@endpush
+

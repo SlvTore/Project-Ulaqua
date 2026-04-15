@@ -152,3 +152,4 @@ var RelativeCaption = /** @class */ (function () {
 
 export default RelativeCaption;
 //# sourceMappingURL=lg-relative-caption.es5.js.map
+

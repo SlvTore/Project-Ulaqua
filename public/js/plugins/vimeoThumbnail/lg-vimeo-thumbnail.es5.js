@@ -180,3 +180,4 @@ var VimeoThumbnail = /** @class */ (function () {
 
 export default VimeoThumbnail;
 //# sourceMappingURL=lg-vimeo-thumbnail.es5.js.map
+

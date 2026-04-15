@@ -40,7 +40,7 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-striped patient-list mb-4 fs-14 pb-0">
+                        <table id="dataTable" class="table table-striped patient-list mb-4 fs-14 pb-0">
                             <thead>
                                 <tr>
                                     <th>Tanggal</th>
@@ -158,4 +158,30 @@
       </div>
     </div>
 </div>
+
+@push('scripts')
+<script src="{{ asset('vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
+<script>
+    (function($) {
+        "use strict"
+        $('#dataTable').DataTable({
+            language: {
+                paginate: {
+                  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
+                },
+                lengthMenu: "Tampilkan _MENU_ riwayat",
+                search: "Cari Riwayat:",
+                info: "Menampilkan _START_ s/d _END_ dari _TOTAL_ data riwayat stok",
+                emptyTable: "Belum ada riwayat transaksi gudang."
+            }
+        });
+    })(jQuery);
+</script>
+<link href="{{ asset('vendor/datatables/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+<style>
+    .dataTables_wrapper .dataTables_paginate .paginate_button { padding: 0.5rem 0.5rem; }
+    .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter { margin-bottom: 20px; }
+</style>
+@endpush
 

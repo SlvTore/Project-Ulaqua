@@ -864,3 +864,4 @@
 		})(jQuery);
 	</script>
 @endpush
+

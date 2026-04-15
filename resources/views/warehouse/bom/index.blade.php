@@ -17,7 +17,7 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table id="dataTable" class="table table-striped">
                     <thead>
                         <tr>
                             <th>ID.</th>
@@ -50,3 +50,34 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
+<script>
+    (function($) {
+        "use strict"
+        $('#dataTable').DataTable({
+            language: {
+                paginate: {
+                  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
+                },
+                lengthMenu: "Tampilkan _MENU_ resep BOM",
+                search: "Cari Resep BOM:",
+                info: "Menampilkan _START_ s/d _END_ dari _TOTAL_ data resep",
+                emptyTable: "Belum ada resep BOM."
+            }
+        });
+    })(jQuery);
+</script>
+<link href="{{ asset('vendor/datatables/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+<style>
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 0.5rem 0.5rem;
+    }
+    .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
+        margin-bottom: 20px;
+    }
+</style>
+@endpush
+

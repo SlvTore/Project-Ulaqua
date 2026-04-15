@@ -130,3 +130,4 @@ var MediumZoom = /** @class */ (function () {
 
 export default MediumZoom;
 //# sourceMappingURL=lg-medium-zoom.es5.js.map
+

@@ -1124,3 +1124,4 @@ class="btn-icon-end"&gt;&lt;i class="fa fa-star"&gt;&lt;/i&gt;&lt;/span&gt;
 		});
 	</script>
     @endpush
+

@@ -37,7 +37,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped verticle-middle table-responsive-sm">
+                        <table id="dataTable" class="table table-bordered table-striped verticle-middle table-responsive-sm">
                             <thead>
                                 <tr>
                                     <th scope="col">Kode Klien</th>
@@ -89,12 +89,41 @@
                         </table>
                     </div>
                 </div>
-                <div class="card-footer border-0 pt-0">
-                    <!-- Pagination (Jika ada) -->
-                    {{ $clients->links('pagination::bootstrap-4') }}
-                </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<!-- Datatable -->
+<script src="{{ asset('vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
+<script>
+    (function($) {
+        "use strict"
+        $('#dataTable').DataTable({
+            language: {
+                paginate: {
+                  next: '<i class="fa fa-angle-double-right" aria-hidden="true"></i>',
+                  previous: '<i class="fa fa-angle-double-left" aria-hidden="true"></i>'
+                },
+                lengthMenu: "Tampilkan _MENU_ data",
+                search: "Pencarian:",
+                info: "Menampilkan _START_ s/d _END_ dari _TOTAL_ data klien",
+                emptyTable: "Belum ada data klien yang terdaftar."
+            }
+        });
+    })(jQuery);
+</script>
+<link href="{{ asset('vendor/datatables/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+<style>
+    /* Styling agar seragam dengan tema Deznav */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 0.5rem 0.5rem;
+    }
+    .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
+        margin-bottom: 20px;
+    }
+</style>
+@endpush
+

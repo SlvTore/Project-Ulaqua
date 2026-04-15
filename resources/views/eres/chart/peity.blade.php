@@ -19,7 +19,7 @@
                             <h4 class="card-title mb-4">Attributes</h4>
                             <div class=" row">
                                 <div class="col-md-2 col-sm-4 col-6">
-                                    <span class="data-attr" data-peity='{ "fill": ["rgb(54, 201, 95)", "rgba(54, 201, 95, .5)"], "innerRadius": 10, "radius": 40 }'>1/7</span>
+                                    <span class="data-attr" data-peity='{ "fill": ["rgb(90, 166, 255)", "rgba(90, 166, 255, .5)"], "innerRadius": 10, "radius": 40 }'>1/7</span>
                                 </div>
                                 <div class="col-md-2 col-sm-4 col-6 mt-3 mt-md-0"><span class="data-attr" data-peity='{ "fill": ["rgb(163, 54, 201)", "rgba(163, 54, 201, .5)"], "innerRadius": 14, "radius": 36 }'>2/7</span>
                                 </div>
@@ -43,7 +43,7 @@
                     <div class="row">
                         <div class="col-lg-4 col-md-4 pb-4">
                             <h4 class="card-title mb-4">Bar Chart</h4>
-                            <div class="px-4"><span class="bar" data-peity='{ "fill": ["rgb(54, 201, 95)", "rgba(54, 201, 95, .5)"]}'>6,2,8,4,3,8,1,3,6,5,9,2,8,1,4,8,9,8,2,1</span>
+                            <div class="px-4"><span class="bar" data-peity='{ "fill": ["rgb(90, 166, 255)", "rgba(90, 166, 255, .5)"]}'>6,2,8,4,3,8,1,3,6,5,9,2,8,1,4,8,9,8,2,1</span>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4 pb-4">
@@ -127,7 +127,7 @@
                     <div class="row">
                         <div class="col-xl-2 col-sm-4 col-6 mt-4 mt-md-0">
                             <h4 class="card-title mb-4">Donut 1</h4>
-                            <div class=""><span class="donut" data-peity='{ "fill": ["rgb(54, 201, 95)", "rgba(54, 201, 95, .5)"]}'>5/8</span>
+                            <div class=""><span class="donut" data-peity='{ "fill": ["rgb(90, 166, 255)", "rgba(90, 166, 255, .5)"]}'>5/8</span>
                             </div>
                         </div>
                         <div class="col-xl-2 col-sm-4 col-6 mt-4 mt-md-0">
@@ -203,3 +203,4 @@
     </div>
 </div>
 @endsection
+

@@ -145,3 +145,4 @@
 
 })));
 //# sourceMappingURL=lg-pager.umd.js.map
+

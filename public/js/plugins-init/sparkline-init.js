@@ -47,12 +47,12 @@
 				//width: "100%",
 				width: getSparkLineGraphBlockSize('#sparkline8'),
 				height: "50",
-				lineColor: "#36c95f",
-				fillColor: "rgba(54, 201, 95, .5)",
-				minSpotColor: "#36c95f",
-				maxSpotColor: "#36c95f",
-				highlightLineColor: "#36c95f",
-				highlightSpotColor: "#36c95f",
+				lineColor: "#5AA6FF",
+				fillColor: "rgba(90, 166, 255, .5)",
+				minSpotColor: "#5AA6FF",
+				maxSpotColor: "#5AA6FF",
+				highlightLineColor: "#5AA6FF",
+				highlightSpotColor: "#5AA6FF",
 				
 			});
 		}
@@ -172,7 +172,7 @@
 				type: "pie",
 				height: "100px",
 				resize: !0,
-				sliceColors: ["rgba(192, 10, 39, .5)", "rgba(0, 0, 128, .5)", "rgba(54, 201, 95, .5)"]
+				sliceColors: ["rgba(192, 10, 39, .5)", "rgba(0, 0, 128, .5)", "rgba(90, 166, 255, .5)"]
 			});
 		}	
 	}	

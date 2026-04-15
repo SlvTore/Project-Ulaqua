@@ -24,10 +24,10 @@
 						{
 							label: "My First dataset",
 							data: [65, 59, 80, 81, 56, 55, 40],
-							borderColor: 'rgba(54, 201, 95, 1)',
+							borderColor: 'rgba(90, 166, 255, 1)',
 							borderWidth: "0",
 							barPercentage: 0.5,
-							backgroundColor: 'rgba(54, 201, 95, 1)'
+							backgroundColor: 'rgba(90, 166, 255, 1)'
 						}
 					]
 				},
@@ -57,8 +57,8 @@
 			const barChart_2 = document.getElementById("barChart_2").getContext('2d');
 			//generate gradient
 			const barChart_2gradientStroke = barChart_2.createLinearGradient(0, 0, 0, 250);
-			barChart_2gradientStroke.addColorStop(0, "rgba(54, 201, 95, 1)");
-			barChart_2gradientStroke.addColorStop(1, "rgba(54, 201, 95, 0.5)");
+			barChart_2gradientStroke.addColorStop(0, "rgba(90, 166, 255, 1)");
+			barChart_2gradientStroke.addColorStop(1, "rgba(90, 166, 255, 0.5)");
 
 			barChart_2.height = 100;
 
@@ -106,8 +106,8 @@
 			const barChart_3 = document.getElementById("barChart_3").getContext('2d');
 			//generate gradient
 			const barChart_3gradientStroke = barChart_3.createLinearGradient(50, 100, 50, 50);
-			barChart_3gradientStroke.addColorStop(0, "rgba(54, 201, 95, 1)");
-			barChart_3gradientStroke.addColorStop(1, "rgba(54, 201, 95, 0.5)");
+			barChart_3gradientStroke.addColorStop(0, "rgba(90, 166, 255, 1)");
+			barChart_3gradientStroke.addColorStop(1, "rgba(90, 166, 255, 0.5)");
 
 			const barChart_3gradientStroke2 = barChart_3.createLinearGradient(50, 100, 50, 50);
 			barChart_3gradientStroke2.addColorStop(0, "rgba(244, 107, 104, 1)");
@@ -216,7 +216,7 @@
 					//ctx.lineWidth = 1;
 					ctx.stroke = function(){
 						ctx.save();
-						ctx.shadowColor = 'rgba(54, 201, 95, 0.1)';
+						ctx.shadowColor = 'rgba(90, 166, 255, 0.1)';
 						ctx.shadowBlur = 10;
 						ctx.shadowOffsetX = 0;
 						ctx.shadowOffsetY = 4;
@@ -251,11 +251,11 @@
 						{
 							label: "My First dataset",
 							data: [25, 20, 60, 41, 66, 45, 80],
-							borderColor: 'rgba(54, 201, 95, 1)',
+							borderColor: 'rgba(90, 166, 255, 1)',
 							borderWidth: "2",
 							backgroundColor: 'transparent',
 							tension:0.5,						
-							pointBackgroundColor: 'rgba(54, 201, 95, 1)'
+							pointBackgroundColor: 'rgba(90, 166, 255, 1)'
 						}
 					]
 				},
@@ -297,8 +297,8 @@
 			const lineChart_2 = document.getElementById("lineChart_2").getContext('2d');
 			//generate gradient
 			const lineChart_2gradientStroke = lineChart_2.createLinearGradient(500, 0, 100, 0);
-			lineChart_2gradientStroke.addColorStop(0, "rgba(54, 201, 95, 1)");
-			lineChart_2gradientStroke.addColorStop(1, "rgba(54, 201, 95, 0.5)");
+			lineChart_2gradientStroke.addColorStop(0, "rgba(90, 166, 255, 1)");
+			lineChart_2gradientStroke.addColorStop(1, "rgba(90, 166, 255, 0.5)");
 
 			class Custom extends Chart.LineController {
 				draw() {
@@ -310,7 +310,7 @@
 					//ctx.lineWidth = 1;
 					ctx.stroke = function(){
 						ctx.save();
-						ctx.shadowColor = 'rgba(54, 201, 95, 0.5)';
+						ctx.shadowColor = 'rgba(90, 166, 255, 0.5)';
 						ctx.shadowBlur = 10;
 						ctx.shadowOffsetX = 0;
 						ctx.shadowOffsetY = 4;
@@ -351,7 +351,7 @@
 							borderWidth: "2",
 							backgroundColor: 'transparent', 
 							tension:0.5,
-							pointBackgroundColor: 'rgba(54, 201, 95, 0.5)'
+							pointBackgroundColor: 'rgba(90, 166, 255, 0.5)'
 						}
 					]
 				},
@@ -386,8 +386,8 @@
 			const lineChart_3 = document.getElementById("lineChart_3").getContext('2d');
 			//generate gradient
 			const lineChart_3gradientStroke1 = lineChart_3.createLinearGradient(500, 0, 100, 0);
-			lineChart_3gradientStroke1.addColorStop(0, "rgba(54, 201, 95, 1)");
-			lineChart_3gradientStroke1.addColorStop(1, "rgba(54, 201, 95, 0.5)");
+			lineChart_3gradientStroke1.addColorStop(0, "rgba(90, 166, 255, 1)");
+			lineChart_3gradientStroke1.addColorStop(1, "rgba(90, 166, 255, 0.5)");
 
 			const lineChart_3gradientStroke2 = lineChart_3.createLinearGradient(500, 0, 100, 0);
 			lineChart_3gradientStroke2.addColorStop(0, "rgba(54, 157, 201, 1)");
@@ -443,7 +443,7 @@
 							borderWidth: "2",
 							backgroundColor: 'transparent', 
 							tension:0.5,
-							pointBackgroundColor: 'rgba(54, 201, 95, 0.5)'
+							pointBackgroundColor: 'rgba(90, 166, 255, 0.5)'
 						}, {
 							label: "My First dataset",
 							data: [5, 20, 15, 41, 35, 65, 80],
@@ -593,7 +593,7 @@
 							data: [25, 20, 60, 41, 66, 45, 80],
 							borderColor: 'rgba(0, 0, 1128, .3)',
 							borderWidth: "1",
-							backgroundColor: 'rgba(54, 201, 95, .5)', 
+							backgroundColor: 'rgba(90, 166, 255, .5)', 
 							tension:0.5,
 							fill:true,
 							pointBackgroundColor: 'rgba(0, 0, 1128, .3)'
@@ -695,11 +695,11 @@
 						{
 							label: "My First dataset",
 							data: [25, 20, 60, 41, 66, 45, 80],
-							borderColor: 'rgb(54, 201, 95)',
+							borderColor: 'rgb(90, 166, 255)',
 							borderWidth: "1",
 							tension:0.5,
 							fill:true,
-							backgroundColor: 'rgba(54, 201, 95, .5)'
+							backgroundColor: 'rgba(90, 166, 255, .5)'
 						}, 
 						{
 							label: "My First dataset",
@@ -803,15 +803,15 @@
 						data: [45, 25, 20, 10],
 						borderWidth: 0, 
 						backgroundColor: [
-							"rgba(54, 201, 95, .9)",
-							"rgba(54, 201, 95, .7)",
-							"rgba(54, 201, 95, .5)",
+							"rgba(90, 166, 255, .9)",
+							"rgba(90, 166, 255, .7)",
+							"rgba(90, 166, 255, .5)",
 							"rgba(0,0,0,0.07)"
 						],
 						hoverBackgroundColor: [
-							"rgba(54, 201, 95, .9)",
-							"rgba(54, 201, 95, .7)",
-							"rgba(54, 201, 95, .5)",
+							"rgba(90, 166, 255, .9)",
+							"rgba(90, 166, 255, .7)",
+							"rgba(90, 166, 255, .5)",
 							"rgba(0,0,0,0.07)"
 						]
 
@@ -849,12 +849,12 @@
 						borderWidth: 3, 
 						borderColor: "rgba(255,255,255,1)",
 						backgroundColor: [
-							"rgba(54, 201, 95, 1)",
+							"rgba(90, 166, 255, 1)",
 							"rgba(244, 107, 104, 1)",
 							"rgba(163, 54, 201, 1)"
 						],
 						hoverBackgroundColor: [
-							"rgba(54, 201, 95, 0.9)",
+							"rgba(90, 166, 255, 0.9)",
 							"rgba(244, 107, 104, .9)",
 							"rgba(163, 54, 201, .9)"
 						]
@@ -889,7 +889,7 @@
 						data: [15, 18, 9, 6, 19],
 						borderWidth: 0, 
 						backgroundColor: [
-							"rgba(54, 201, 95, 1)",
+							"rgba(90, 166, 255, 1)",
 							"rgba(244, 107, 104, 1)",
 							"rgba(163, 54, 201, 1)",
 							"rgba(255, 184, 0, 1)",

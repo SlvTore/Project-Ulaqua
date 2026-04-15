@@ -119,7 +119,7 @@
 		  // Function to toggle the button text and class
 		  function toggleFollowButton() {
 			if (isFollowing) {
-			  $("#follow-button").removeClass("following") .css({'background-color':'#36c95f', 'border-color': '#36c95f'}).text("Follow");
+			  $("#follow-button").removeClass("following") .css({'background-color':'#5AA6FF', 'border-color': '#5AA6FF'}).text("Follow");
 			} else {
 			  $("#follow-button").addClass("following").css({'background-color':'#369dc9', 'border-color': '#369dc9'}).text("Following");
 			}
@@ -240,3 +240,4 @@
     </div>
   </div>
 @endpush
+

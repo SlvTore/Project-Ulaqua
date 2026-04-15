@@ -280,3 +280,4 @@
 
 })));
 //# sourceMappingURL=lg-rotate.umd.js.map
+

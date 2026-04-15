@@ -503,3 +503,4 @@
             })(jQuery);
         </script>
     @endpush
+

@@ -138,3 +138,4 @@
 
 })));
 //# sourceMappingURL=lg-medium-zoom.umd.js.map
+

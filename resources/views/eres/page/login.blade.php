@@ -7,7 +7,7 @@
                 <div class="col-xl-12">
                     <div class="auth-form">
                         <div class="text-center mb-3">
-                            <a href="{{url('index')}}"><img src="{{ asset('images/logo-full.png') }}" alt=""></a>
+                            <a href="{{url('index')}}"><img src="{{ asset('images/logo-ulaqua.png') }}" alt="" style="max-width: 200px;"></a>
                         </div>
                         <h4 class="text-center mb-4">Sign in your account</h4>
                         <!-- Pastikan method-nya POST dan action mengarah ke rute 'login' bawaan Laravel -->
@@ -51,12 +51,10 @@
                                 <button type="submit" class="btn btn-primary btn-block">Masuk ke Sistem</button>
                             </div>
                         </form>
-                        <div class="new-account mt-3">
-                            <p>Don't have an account? <a class="text-primary" href="{{url('page-register')}}">Sign up</a></p>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+

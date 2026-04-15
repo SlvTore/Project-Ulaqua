@@ -489,3 +489,4 @@
 
 })));
 //# sourceMappingURL=lg-thumbnail.umd.js.map
+
