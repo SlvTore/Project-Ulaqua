@@ -1,0 +1,53 @@
+/* Footer social button customization */
+.main-footer .subscribe-widget .social-links h6 {
+  color: #ffffff;
+  margin-bottom: 14px;
+}
+
+.main-footer .subscribe-widget .social-links ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+.main-footer .subscribe-widget .social-links ul li {
+  margin: 0;
+}
+
+.main-footer .subscribe-widget .social-links ul li a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  gap: 12px;
+  min-height: 44px;
+  padding: 12px 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #dbe7ff;
+  font-size: 18px;
+  line-height: 1;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.main-footer .subscribe-widget .social-links ul li a i {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.main-footer .subscribe-widget .social-links ul li a:hover {
+  color: #ffffff;
+  border-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.main-footer .subscribe-widget .social-links ul li a:hover i {
+  color: #ffffff;
+}

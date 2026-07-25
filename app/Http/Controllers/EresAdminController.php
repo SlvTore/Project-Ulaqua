@@ -79,12 +79,18 @@ class EresAdminController extends Controller
             $revenueValues[] = $sales->sum('total_amount');
         }
 
+        // 7. Data Analitik: Top 5 Produk paling sering dilihat di halaman publik
+        $productViews = \App\Models\ProductView::with(['item.category', 'item.unit'])
+                        ->orderByDesc('views')
+                        ->take(5)
+                        ->get();
+
 		return view('eres.dashboard.index', compact(
             'page_title', 'page_description', 'totalClients', 'totalSales', 'totalItems',
             'revenue', 'leaders', 'recentSales', 'topProducts',
             'totalHpp', 'grossProfit',
             'hppPercentage', 'profitPercentage',
-            'revenueLabels', 'revenueValues'
+            'revenueLabels', 'revenueValues', 'productViews'
         ));
 	}
 

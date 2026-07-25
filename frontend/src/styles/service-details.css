@@ -1,0 +1,298 @@
+
+
+/* Service Details Section */
+.service-details {
+  position: relative;
+  padding: 120px 0px;
+}
+
+.service-details-content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.service-details-content .content-one,
+.service-details-content .content-two,
+.service-details-content .content-three,
+.service-details-content .content-gallery {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 35px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.service-details-content .content-one {
+  position: relative;
+  margin-bottom: 0;
+}
+
+.service-details-content .content-one .text h2 {
+  font-size: 36px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #172746;
+  margin-bottom: 25px;
+}
+
+.service-details-content .content-one .text p {
+  font-size: 16px;
+  line-height: 1.75;
+  color: #666666;
+  margin-bottom: 30px;
+}
+
+.service-details-content .content-one .image-box {
+  position: relative;
+  margin-bottom: 0;
+}
+
+.service-details-content .content-one .image-box img {
+  width: 100%;
+  border-radius: 15px;
+}
+
+/* Content Two */
+.service-details-content .content-two {
+  position: relative;
+  margin-bottom: 0;
+}
+
+.service-details-content .content-two .text h3 {
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #172746;
+  margin-bottom: 25px;
+}
+
+.service-details-content .content-two .text p {
+  font-size: 16px;
+  line-height: 1.75;
+  color: #666666;
+  margin-bottom: 20px;
+}
+
+.service-details-content .content-two .inner-box {
+  position: relative;
+  margin-top: 40px;
+  display: grid;
+  gap: 18px;
+}
+
+.service-details-content .content-two .single-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0;
+  background-color: #f7f9ff;
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.service-details-content .content-two .single-item:last-child {
+  margin-bottom: 0;
+}
+
+.service-details-content .content-two .single-item .icon-box {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+  background-color: #f0f4ff;
+  border-radius: 50%;
+  margin-right: 25px;
+  flex-shrink: 0;
+}
+
+.service-details-content .content-two .single-item .icon-box i {
+  font-size: 30px;
+  color: #2457ad;
+}
+
+.service-details-content .content-two .single-item h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #172746;
+  margin-bottom: 8px;
+}
+
+.service-details-content .content-two .single-item .feature-content {
+  flex: 1;
+}
+
+.service-details-content .content-two .single-item p {
+  font-size: 16px;
+  color: #666666;
+  margin-bottom: 0;
+}
+
+.service-details-content .content-three .text h3,
+.service-details-content .content-gallery .text h3 {
+  font-size: 28px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #172746;
+  margin-bottom: 20px;
+}
+
+.service-details-content .content-three .text p,
+.service-details-content .content-gallery .text p {
+  font-size: 16px;
+  line-height: 1.75;
+  color: #666666;
+  margin-bottom: 16px;
+}
+
+.service-details-content .content-three .text p:last-child,
+.service-details-content .content-gallery .text p:last-child {
+  margin-bottom: 0;
+}
+
+/* Content Gallery */
+.service-details-content .content-gallery {
+  position: relative;
+  margin-top: 0;
+}
+
+.service-details-content .content-gallery .image-column .image {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.service-details-content .content-gallery .image-column .image img {
+  width: 100%;
+  border-radius: 15px;
+}
+
+.service-details-content .content-gallery .text {
+  margin-top: 8px;
+}
+
+/* Service Sidebar */
+.service-sidebar {
+  position: relative;
+}
+
+.service-sidebar .category-widget {
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 15px;
+  padding: 40px 30px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+.service-sidebar .category-widget h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #172746;
+  margin-bottom: 30px;
+}
+
+.service-sidebar .category-widget .category-list {
+  position: relative;
+}
+
+.service-sidebar .category-widget .category-list li {
+  position: relative;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 15px 0;
+}
+
+.service-sidebar .category-widget .category-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.service-sidebar .category-widget .category-list li a {
+  position: relative;
+  font-size: 16px;
+  font-weight: 500;
+  color: #666666;
+  transition: all 500ms ease;
+}
+
+.service-sidebar .category-widget .category-list li a.current,
+.service-sidebar .category-widget .category-list li a:hover {
+  color: #2457ad;
+}
+
+.service-sidebar .category-widget .category-list li a i {
+  margin-right: 10px;
+  color: #2457ad;
+}
+
+/* Support Box */
+.service-sidebar .support-box {
+  position: relative;
+  background-color: #2457ad;
+  border-radius: 15px;
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.service-sidebar .support-box h4 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 15px;
+}
+
+.service-sidebar .support-box p {
+  font-size: 16px;
+  color: #ffffff;
+  margin-bottom: 25px;
+}
+
+.service-sidebar .support-box .theme-btn {
+  background-color: #ffffff;
+  color: #2457ad;
+}
+
+.service-sidebar .support-box .theme-btn:hover {
+  background-color: #f0f4ff;
+}
+
+/* Responsive */
+@media only screen and (max-width: 767px) {
+  .service-details {
+    padding: 80px 0px;
+  }
+
+  .service-details-content {
+    gap: 20px;
+  }
+
+  .service-details-content .content-one,
+  .service-details-content .content-two,
+  .service-details-content .content-three,
+  .service-details-content .content-gallery {
+    padding: 24px 18px;
+    border-radius: 12px;
+  }
+
+  .service-details-content .content-one .text h2 {
+    font-size: 30px;
+    margin-bottom: 16px;
+  }
+
+  .service-details-content .content-two .text h3,
+  .service-details-content .content-three .text h3,
+  .service-details-content .content-gallery .text h3 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  
+  .service-details-content .content-two .single-item {
+    flex-direction: column;
+    text-align: left;
+    padding: 16px;
+  }
+  
+  .service-details-content .content-two .single-item .icon-box {
+    margin-right: 0;
+    margin-bottom: 14px;
+  }
+}

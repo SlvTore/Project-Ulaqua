@@ -386,6 +386,68 @@
             </div>
         </div>
     </div>
+
+    <!-- BARIS 3: ANALITIK PENGUNJUNG (PRODUK TERPOPULER DI WEB PUBLIK) -->
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card">
+                <div class="card-header border-0 pb-0">
+                    <h3 class="fs-20 mb-0 text-black">Analitik Pengunjung: Produk Terpopuler di Halaman Publik</h3>
+                    <span class="text-muted fs-14">Data real-time dari klik produk oleh pelanggan di situs publik</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-responsive-md">
+                            <thead>
+                                <tr>
+                                    <th><strong>No.</strong></th>
+                                    <th><strong>Nama Produk</strong></th>
+                                    <th><strong>SKU</strong></th>
+                                    <th><strong>Kategori</strong></th>
+                                    <th><strong>Harga Master</strong></th>
+                                    <th><strong>Stok Gudang</strong></th>
+                                    <th><strong>Status Stok</strong></th>
+                                    <th><strong>Total Kunjungan (Klik)</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($productViews as $index => $view)
+                                <tr>
+                                    <td><strong>{{ $index + 1 }}</strong></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <span class="w-space-no">{{ $view->item->name }}</span>
+                                        </div>
+                                    </td>
+                                    <td>{{ $view->item->sku ?? '-' }}</td>
+                                    <td>{{ $view->item->category->name ?? 'Produk Jadi' }}</td>
+                                    <td>Rp {{ number_format($view->item->default_price, 0, ',', '.') }}</td>
+                                    <td>{{ $view->item->expected_stock }} {{ $view->item->unit->short_name ?? 'Pcs' }}</td>
+                                    <td>
+                                        @if($view->item->expected_stock <= 0)
+                                            <span class="badge light badge-danger">Stok Habis (Kosong di Web)</span>
+                                        @elseif($view->item->expected_stock < $view->item->min_alert)
+                                            <span class="badge light badge-warning">Stok Menipis</span>
+                                        @else
+                                            <span class="badge light badge-success">Stok Aman</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-info pr-3 pl-3 font-w600" style="padding: 6px 12px;"><i class="fa fa-eye me-2"></i>{{ number_format($view->views) }} kali</span>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="8" class="text-center text-muted py-4">Belum ada data kunjungan produk dari halaman publik.</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 @push('scripts')

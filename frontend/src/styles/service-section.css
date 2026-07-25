@@ -1,0 +1,492 @@
+/* Service Page Styles - Mirror of Acuasafe Template */
+
+/* Service Page Section */
+.service-page-section {
+  position: relative;
+  padding: 120px 0px 90px 0px;
+}
+
+.service-page-section.centred {
+  text-align: center;
+}
+
+.service-page-section .sec-title {
+  margin-bottom: 70px;
+}
+
+.service-page-section .sec-title h2 {
+  font-size: 48px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #172746;
+  margin-bottom: 0;
+}
+
+/* Service Block Two */
+.service-block-two {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.service-block-two .inner-box {
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 20px;
+  text-align: center;
+  padding: 50px 30px 45px 30px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 500ms ease;
+}
+
+.service-block-two:hover .inner-box {
+  background-color: #2457ad;
+  transform: translateY(-10px);
+}
+
+.service-block-two .inner-box .icon-box {
+  position: relative;
+  margin-bottom: 35px;
+}
+
+.service-block-two .inner-box .icon-box .icon {
+  position: relative;
+  display: inline-block;
+  width: 90px;
+  height: 90px;
+  line-height: 90px;
+  background-color: #f0f4ff;
+  border-radius: 50%;
+  font-size: 48px;
+  color: #2457ad;
+  transition: all 500ms ease;
+}
+
+.service-block-two:hover .inner-box .icon-box .icon {
+  background-color: #ffffff;
+  color: #2457ad;
+}
+
+.service-block-two .inner-box h4 {
+  position: relative;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  color: #172746;
+  margin-bottom: 15px;
+  transition: all 500ms ease;
+}
+
+.service-block-two .inner-box h4 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.service-block-two:hover .inner-box h4 {
+  color: #ffffff;
+}
+
+.service-block-two .inner-box p {
+  font-size: 16px;
+  line-height: 26px;
+  color: #777777;
+  margin-bottom: 30px;
+  transition: all 500ms ease;
+}
+
+.service-block-two:hover .inner-box p {
+  color: #ffffff;
+}
+
+.service-block-two .inner-box .btn-box {
+  position: relative;
+}
+
+.service-block-two .inner-box .btn-box .theme-btn.btn-two {
+  position: relative;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2457ad;
+  background-color: transparent;
+  border: 2px solid #2457ad;
+  padding: 15px 30px;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: all 500ms ease;
+}
+
+.service-block-two:hover .inner-box .btn-box .theme-btn.btn-two {
+  color: #2457ad;
+  background-color: #ffffff;
+  border-color: #ffffff;
+}
+
+/* Service Details Page */
+.service-details {
+  position: relative;
+  padding: 120px 0px;
+}
+
+.service-details-content .content-one {
+  position: relative;
+  margin-bottom: 50px;
+}
+
+.service-details-content .content-one .text h2 {
+  font-size: 36px;
+  line-height: 46px;
+  font-weight: 700;
+  color: #172746;
+  margin-bottom: 25px;
+}
+
+.service-details-content .content-one .text p {
+  font-size: 16px;
+  line-height: 28px;
+  color: #777777;
+  margin-bottom: 0;
+}
+
+.service-details-content .content-one .image-box {
+  position: relative;
+  margin-top: 45px;
+}
+
+.service-details-content .content-one .image-box img {
+  width: 100%;
+  border-radius: 15px;
+}
+
+.service-details-content .content-two {
+  position: relative;
+  margin-bottom: 60px;
+}
+
+.service-details-content .content-two .text h3 {
+  font-size: 30px;
+  line-height: 40px;
+  font-weight: 600;
+  color: #172746;
+  margin-bottom: 25px;
+}
+
+.service-details-content .content-two .text p {
+  font-size: 16px;
+  line-height: 28px;
+  color: #777777;
+  margin-bottom: 20px;
+}
+
+.service-details-content .content-two .inner-box {
+  position: relative;
+  margin-top: 45px;
+}
+
+.service-details-content .content-two .inner-box .single-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.service-details-content .content-two .inner-box .single-item:last-child {
+  margin-bottom: 0;
+}
+
+.service-details-content .content-two .inner-box .single-item .icon-box {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  background-color: #f0f4ff;
+  border-radius: 50%;
+  text-align: center;
+  margin-right: 25px;
+  flex-shrink: 0;
+}
+
+.service-details-content .content-two .inner-box .single-item .icon-box i {
+  font-size: 24px;
+  color: #2457ad;
+}
+
+.service-details-content .content-two .inner-box .single-item h4 {
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 600;
+  color: #172746;
+  margin-bottom: 8px;
+}
+
+.service-details-content .content-two .inner-box .single-item p {
+  font-size: 16px;
+  line-height: 26px;
+  color: #777777;
+  margin-bottom: 0;
+}
+
+.service-details-content .content-three {
+  position: relative;
+}
+
+.service-details-content .content-three .image-box {
+  position: relative;
+  margin-bottom: 45px;
+}
+
+.service-details-content .content-three .image-box .image {
+  position: relative;
+}
+
+.service-details-content .content-three .image-box .image img {
+  width: 100%;
+  border-radius: 15px;
+}
+
+.service-details-content .content-three .text h3 {
+  font-size: 30px;
+  line-height: 40px;
+  font-weight: 600;
+  color: #172746;
+  margin-bottom: 25px;
+}
+
+.service-details-content .content-three .text p {
+  font-size: 16px;
+  line-height: 28px;
+  color: #777777;
+  margin-bottom: 20px;
+}
+
+/* Service Sidebar */
+.service-sidebar {
+  position: relative;
+}
+
+.service-sidebar .category-widget {
+  position: relative;
+  background-color: #f8f9fa;
+  padding: 40px 30px 35px 30px;
+  margin-bottom: 50px;
+  border-radius: 15px;
+}
+
+.service-sidebar .category-widget h3 {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  color: #172746;
+  margin-bottom: 30px;
+}
+
+.service-sidebar .category-widget .category-list {
+  position: relative;
+}
+
+.service-sidebar .category-widget .category-list li {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.service-sidebar .category-widget .category-list li:last-child {
+  margin-bottom: 0;
+}
+
+.service-sidebar .category-widget .category-list li a {
+  position: relative;
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #777777;
+  padding: 12px 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  transition: all 500ms ease;
+  text-decoration: none;
+}
+
+.service-sidebar .category-widget .category-list li a i {
+  margin-right: 15px;
+  color: #2457ad;
+}
+
+.service-sidebar .category-widget .category-list li a:hover,
+.service-sidebar .category-widget .category-list li a.current {
+  color: #ffffff;
+  background-color: #2457ad;
+}
+
+.service-sidebar .category-widget .category-list li a:hover i,
+.service-sidebar .category-widget .category-list li a.current i {
+  color: #ffffff;
+}
+
+.service-sidebar .support-box {
+  position: relative;
+  background-color: #2457ad;
+  padding: 40px 30px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.service-sidebar .support-box .inner-box {
+  position: relative;
+}
+
+.service-sidebar .support-box .inner-box .icon-box {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.service-sidebar .support-box .inner-box .icon-box i {
+  font-size: 48px;
+  color: #2457ad;
+}
+
+.service-sidebar .support-box .inner-box h4 {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 15px;
+}
+
+.service-sidebar .support-box .inner-box p {
+  font-size: 16px;
+  line-height: 26px;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.service-sidebar .support-box .inner-box .phone-number {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.service-sidebar .support-box .inner-box .phone-number a {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2457ad;
+  text-decoration: none;
+}
+
+.service-sidebar .support-box .inner-box .theme-btn.btn-one {
+  background-color: #ffffff;
+  color: #2457ad;
+  border: 2px solid #ffffff;
+}
+
+.service-sidebar .support-box .inner-box .theme-btn.btn-one:hover {
+  background-color: transparent;
+  color: #2457ad;
+  border-color: #ffffff;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .service-page-section .sec-title h2 {
+    font-size: 36px;
+  }
+  
+  .service-block-two .inner-box {
+    padding: 40px 25px 35px 25px;
+  }
+  
+  .service-details-content .content-one .text h2 {
+    font-size: 30px;
+    line-height: 40px;
+  }
+  
+  .service-sidebar {
+    margin-top: 50px;
+  }
+}
+
+@media (max-width: 767px) {
+  .service-page-section {
+    padding: 80px 0px 60px 0px;
+  }
+  
+  .service-page-section .sec-title h2 {
+    font-size: 30px;
+  }
+  
+  .service-block-two .inner-box {
+    padding: 35px 20px 30px 20px;
+  }
+  
+  .service-details {
+    padding: 80px 0px;
+  }
+  
+  .service-details-content .content-one .text h2 {
+    font-size: 26px;
+    line-height: 36px;
+  }
+}
+
+/* Equal height untuk card service */
+.service-page-section .row.clearfix,
+.service-section .row.clearfix {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.service-page-section .service-block,
+.service-section .service-block {
+  display: flex;
+}
+
+.service-page-section .service-block .service-block-two,
+.service-section .service-block .service-block-two {
+  width: 100%;
+  height: 100%;
+}
+
+.service-block-two .inner-box {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.service-block-two .inner-box .btn-box {
+  margin-top: auto;
+}
+
+/* Equal height card service (aman untuk widget + animasi icon) */
+.service-page-section .service-block,
+.service-section .service-block {
+  display: flex;
+}
+
+.service-page-section .service-block .service-block-two,
+.service-section .service-block .service-block-two {
+  width: 100%;
+  display: flex;
+}
+
+.service-block-two .inner-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.service-block-two .inner-box .btn-box {
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+/* Jaga icon tetap center saat card di-stretch */
+.service-block-two .inner-box .icon-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Kalau pseudo icon dari template aktif, paksa tetap center */
+.service-block-two .inner-box .icon-box:before,
+.service-block-two .inner-box .icon-box:after {
+  left: 50%;
+  transform: translateX(-50%);
+}

@@ -1,0 +1,332 @@
+/* Banner Style Two - Hero Swiper Section */
+.banner-style-two {
+  position: relative;
+  background-color: #fff;
+  padding-bottom: 20px;
+  min-height: 100vh;
+}
+
+.banner-style-two .pattern-layer {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  z-index: 0;
+}
+
+.banner-style-two .pattern-layer-2 {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 1000px;
+  height: 682px;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  z-index: 1;
+}
+
+/* Swiper Container */
+.banner-carousel.hero-swiper {
+  position: relative;
+  z-index: 2;
+  height: 100vh;
+}
+
+.banner-carousel .slide-item {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.banner-carousel .image-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 1;
+}
+
+.banner-carousel .auto-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.banner-carousel .inner-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Content Box - Left Side */
+.banner-carousel .content-box {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding: 243px 0px 350px 0px;
+  z-index: 3;
+}
+
+.banner-carousel .content-box h2 {
+  font-size: 48px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #172746;
+  margin-bottom: 20px;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: slideInUp 1s ease forwards;
+  animation-delay: 0.3s;
+}
+
+.banner-carousel .content-box p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #172746;
+  margin-bottom: 30px;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: slideInUp 1s ease forwards;
+  animation-delay: 0.6s;
+}
+
+.banner-carousel .content-box .btn-box {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: slideInUp 1s ease forwards;
+  animation-delay: 0.9s;
+}
+
+.banner-carousel .content-box .btn-box .banner-btn {
+  background-color: #fff;
+  border-color: #fff;
+  color: #172746 !important;
+  margin-left: 15px;
+}
+
+.banner-carousel .content-box .btn-box .banner-btn:hover {
+  color: #fff !important;
+}
+
+/* Image Box - Right Side */
+.banner-carousel .image-box {
+  flex: 0 0 50%;
+  max-width: 50%;
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100vh;
+}
+
+.banner-carousel .image-box .image {
+  position: relative;
+  margin: 0;
+  opacity: 0;
+  transform: translateX(100px);
+  animation: slideInRight 1s ease forwards;
+  animation-delay: 1.2s;
+}
+
+.banner-carousel .image-box .image img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Swiper Navigation */
+.swiper-button-prev,
+.swiper-button-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #172746;
+  font-size: 18px;
+  font-weight: bold;
+  z-index: 10;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.swiper-button-prev {
+  left: 30px;
+}
+
+.swiper-button-next {
+  right: 30px;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  background: #2457ad;
+  color: #fff;
+  border-color: #2457ad;
+}
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* Swiper Pagination */
+.swiper-pagination {
+  bottom: 30px !important;
+  z-index: 10;
+}
+
+.swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 1;
+  margin: 0 5px;
+  transition: all 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+  background: #2457ad;
+  transform: scale(1.2);
+}
+
+/* Animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .banner-carousel .content-box h2 {
+    font-size: 42px;
+  }
+  
+  .banner-carousel .content-box {
+    padding: 200px 0px 300px 0px;
+  }
+}
+
+@media (max-width: 991px) {
+  .banner-carousel .inner-box {
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+  }
+  
+  .banner-carousel .content-box,
+  .banner-carousel .image-box {
+    flex: 1;
+    max-width: 100%;
+  }
+  
+  .banner-carousel .content-box {
+    padding: 100px 0px 50px 0px;
+    order: 2;
+  }
+  
+  .banner-carousel .image-box {
+    order: 1;
+    justify-content: center;
+    height: auto;
+    margin-bottom: 30px;
+  }
+  
+  .banner-carousel .content-box h2 {
+    font-size: 36px;
+  }
+  
+  .banner-carousel .image-box .image {
+    animation: slideInUp 1s ease forwards;
+    animation-delay: 0.6s;
+  }
+}
+
+@media (max-width: 767px) {
+  .banner-carousel .content-box h2 {
+    font-size: 28px;
+    line-height: 1.3;
+  }
+  
+  .banner-carousel .content-box p {
+    font-size: 16px;
+  }
+  
+  .banner-carousel .content-box {
+    padding: 80px 0px 40px 0px;
+  }
+  
+  .swiper-button-prev {
+    left: 15px;
+  }
+  
+  .swiper-button-next {
+    right: 15px;
+  }
+  
+  .swiper-button-prev,
+  .swiper-button-next {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 575px) {
+  .banner-carousel .content-box {
+    padding: 60px 0px 30px 0px;
+  }
+  
+  .banner-carousel .content-box h2 {
+    font-size: 24px;
+  }
+  
+  .banner-carousel .content-box .btn-box .theme-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  
+  .banner-carousel .content-box .btn-box .banner-btn {
+    margin-left: 10px;
+    margin-top: 10px;
+  }
+}

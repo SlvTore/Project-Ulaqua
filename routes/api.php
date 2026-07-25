@@ -17,3 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Route API Publik untuk Frontend React
+Route::get('/public/items', [App\Http\Controllers\Api\PublicItemController::class, 'index']);
+Route::post('/public/items/{id}/view', [App\Http\Controllers\Api\PublicItemController::class, 'recordView']);

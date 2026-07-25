@@ -11,10 +11,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Panggil seeder Role/Akun dan Master Data
         $this->call([
             RolePermissionSeeder::class,
             MasterDataSeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }

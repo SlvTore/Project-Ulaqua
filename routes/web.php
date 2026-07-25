@@ -20,7 +20,7 @@ use App\Http\Controllers\NotificationController;
 |
 */
 
-Route::middleware(['auth'])->group(function () {
+Route::prefix('admin')->middleware(['auth'])->group(function () {
     // Header Pulse Routes for AJAX Polling
     Route::get('/api/header-pulse', [NotificationController::class, 'headerPulse'])->name('header.pulse');
     Route::post('/api/notifications/mark-read', [NotificationController::class, 'markAsRead'])->name('notifications.markRead');
@@ -148,11 +148,27 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/clients/{id}/update-photo', [\App\Http\Controllers\ClientController::class, 'updatePhoto'])->name('clients.update_photo');
 });
 
-Auth::routes([
-    'register' => false,
-    'reset' => false,
-]);
+Route::prefix('admin')->group(function () {
+    Auth::routes([
+        'register' => false,
+        'reset' => false,
+    ]);
+    
+    // Profile Update (Protected)
+    Route::post('/profile/update', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+});
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+// Redirect /home to /admin
+Route::get('/home', function () {
+    return redirect('/admin');
+});
+
+// Fallback route to serve React Frontend
+Route::get('{any}', function () {
+    $indexPath = public_path('index.html');
+    if (file_exists($indexPath)) {
+        return file_get_contents($indexPath);
+    }
+    return response("React frontend build not found. Please run 'npm run build' in the frontend directory.", 404);
+})->where('any', '^(?!admin|api|storage).*$');
 

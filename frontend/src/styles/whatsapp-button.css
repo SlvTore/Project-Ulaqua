@@ -1,0 +1,58 @@
+/* Shared WhatsApp CTA button used in navbar and footer */
+.wa-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: 1px solid #25d366;
+  background: linear-gradient(135deg, #25d366 0%, #1fb457 100%);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 8px 22px rgba(37, 211, 102, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  animation: waPulse 2s infinite;
+}
+
+.wa-btn i {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.wa-btn:hover {
+  color: #ffffff;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 28px rgba(37, 211, 102, 0.45);
+  filter: brightness(1.03);
+}
+
+.wa-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+@keyframes waPulse {
+  0% {
+    box-shadow: 0 8px 22px rgba(37, 211, 102, 0.35), 0 0 0 0 rgba(37, 211, 102, 0.25);
+  }
+  70% {
+    box-shadow: 0 10px 24px rgba(37, 211, 102, 0.4), 0 0 0 12px rgba(37, 211, 102, 0);
+  }
+  100% {
+    box-shadow: 0 8px 22px rgba(37, 211, 102, 0.35), 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+/* Keep button neat on narrow header/footer areas */
+@media (max-width: 991px) {
+  .wa-btn {
+    min-height: 44px;
+    padding: 10px 16px;
+    font-size: 15px;
+  }
+}
